@@ -1,14 +1,23 @@
 {
-  "name": "myapp",
+  "name": "chatbottsit",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Zchwazer@github.com/Zchwazer/chatbotTsit.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zchwazer/chatbotTsit/issues"
+  },
+  "homepage": "https://github.com/Zchwazer/chatbotTsit#readme",
   "dependencies": {
     "express": "^4.17.1"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }
