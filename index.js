@@ -27,29 +27,54 @@ app.post('/users', function (req, res) {
   let docRef = db.collection('users').doc('alovelace');
 
   let setAda = docRef.set({
-    userId: '',             //* _stuIdRegister 
-    userEmail: '',          //* _emailRegister
-    userPassword: '',       //* _passwordRegister
+    userId: '', //* _stuIdRegister 
+    userEmail: '', //* _emailRegister
+    userPassword: '', //* _passwordRegister
     userLevel: false
   });
 })
 
 //# Read Data
 //? GET ALL
-app.get('/users',function (req,res){
-  res.send('Get finish')
+app.get('/users', function (req, res) {
+  res.send('Get all')
 
   db.collection('users').get()
-  .then((snapshot) => {
-    snapshot.forEach((doc) => {
-      console.log(doc.id, '=>', doc.data());
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        console.log(doc.id, '=>', doc.data());
+      });
+    })
+    .catch((err) => {
+      console.log('Error getting documents', err);
     });
-  })
-  .catch((err) => {
-    console.log('Error getting documents', err);
-  });
 })
-//? GET SINGLE
-app.get('/users/{userId}',function (req,res){
 
+//? GET SINGLE
+app.get('/users/:id', function (req, res) {
+  var checker = 0
+
+  let userRef = db.collection('users').doc(req.params.id)
+  let getOnce = userRef.get()
+
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('No such document!');
+        checker = 0;
+      } else {
+        console.log('Document data:', doc.data());
+        checker = 1;
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+    });
+
+  res.send(checker)
+  // checker != false ? res.send('Data found') : res.send('Data not found');
 })
+
+//# Function for send data on Response
+function responseData(checker) {
+  return res.send('Document data : ', doc.data());
+}
