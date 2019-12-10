@@ -4,7 +4,7 @@ const app = express()
 const port = 3000
 
 //# GET METHOD (All)
-app.get('/', function (req, res) {
+app.get('/aa', function (req, res) {
     res.send('GET request to homepage')
 })
 
