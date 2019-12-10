@@ -1,0 +1,11 @@
+GET => localhost:1111/users
+doc.id '=>' doc.data()			: เรียกข้อมูลผู้ใช้ทั้งหมด
+doc.id '=>' doc.data().userId		: เรียกไอดีผู้ใช้
+doc.id '=>' doc.data().userPassword	: เรียกรหัสผู้ใช้
+doc.id '=>' doc.data().userFname	: เรียกชื่อผู้ใช้
+doc.id '=>' doc.data().userLname	: เรียกนามสกุลผู้ใช้
+doc.id '=>' doc.data().userEmail	: เรียกอีเมลผู้ใช้
+doc.id '=>' doc.data().userLevel	: เรียกระดับผู้ใช้
+---------------------------------
+POST => localhost:1111/
+

@@ -2,9 +2,8 @@
 const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 
-// admin.initializeApp(functions.config().firebase);
-
-var serviceAccount = require("path/to/serviceAccountKey.json");
+//? Definition 
+var serviceAccount = require('./asset/newagent-47c20-firebase-adminsdk-jg99g-7f32e79e95.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -38,7 +37,7 @@ app.post('/users', function (req, res) {
 //# Read Data
 //? GET ALL
 app.get('/users',function (req,res){
-  res.send('Get All User')
+  res.send('Get finish')
 
   db.collection('users').get()
   .then((snapshot) => {
