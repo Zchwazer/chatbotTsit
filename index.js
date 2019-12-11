@@ -15,7 +15,7 @@ let db = admin.firestore();
 //! Initialize Express
 const express = require('express')
 const app = express()
-const port = 1111
+const port = 1010
 
 app.listen(port, () => console.log(`App running at port ${port}!`))
 
@@ -24,21 +24,29 @@ app.listen(port, () => console.log(`App running at port ${port}!`))
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
 
 //! Application Program Interface (API)
 //# Add user data to firebase cloud store
 app.post('/users', function (req, res) {
-  res.send('Post User')
+  var id = req.body.userId
+  var email = req.body.userEmail
+  var password = req.body.userPassword
+  var level = false
 
-  let docRef = db.collection('users').doc('alovelace');
+  checkUserId(id)
+
+  let docRef = db.collection('users').doc(id);
 
   let setAda = docRef.set({
-    userId: '', //* _stuIdRegister 
-    userEmail: '', //* _emailRegister
-    userPassword: '', //* _passwordRegister
-    userLevel: false
+    userEmail: email,
+    userPassword: password,
+    userLevel: level
   });
+
+  res.json(id[email, password, level])
 })
 
 //# Read Data
@@ -77,3 +85,14 @@ app.get('/users/:id', function (req, res) {
       console.log('Error getting document', err);
     });
 })
+
+//# Function
+//~ Check user id & student id is same or not (in registration section)
+function checkUserId(id) {
+  // let stuRef = db.collection('students').doc().id
+  var lengthValidate = false
+  id.length != 13 ? lengthValidate = false : lengthValidate = true;
+  if (lengthValidate == false) {
+    res.status(404).end();
+  }
+}
