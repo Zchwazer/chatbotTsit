@@ -19,6 +19,13 @@ const port = 1111
 
 app.listen(port, () => console.log(`App running at port ${port}!`))
 
+//! Middleware (Body parser)
+//* bodyParser use for filter request before data run to application
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
 //! Application Program Interface (API)
 //# Add user data to firebase cloud store
 app.post('/users', function (req, res) {
@@ -36,6 +43,7 @@ app.post('/users', function (req, res) {
 
 //# Read Data
 //? GET ALL
+//* Example : localhost:1111/users
 app.get('/users', function (req, res) {
   res.send('Get all')
 
@@ -51,30 +59,21 @@ app.get('/users', function (req, res) {
 })
 
 //? GET SINGLE
+//* Example : localhost:1111/users/{studentId}
 app.get('/users/:id', function (req, res) {
-  var checker = 0
-
   let userRef = db.collection('users').doc(req.params.id)
   let getOnce = userRef.get()
 
     .then(doc => {
       if (!doc.exists) {
         console.log('No such document!');
-        checker = 0;
+        res.send('No such document');
       } else {
         console.log('Document data:', doc.data());
-        checker = 1;
+        res.json(doc.data); //! ERR : how to send data on response body
       }
     })
     .catch(err => {
       console.log('Error getting document', err);
     });
-
-  res.send(checker)
-  // checker != false ? res.send('Data found') : res.send('Data not found');
 })
-
-//# Function for send data on Response
-function responseData(checker) {
-  return res.send('Document data : ', doc.data());
-}
