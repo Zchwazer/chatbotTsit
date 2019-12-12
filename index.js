@@ -22,7 +22,7 @@ admin.initializeApp({
 let db = admin.firestore();
 
 //! Define port
-const port = 1010 
+const port = 1010
 
 //! Initialize Express
 const express = require('express')
@@ -69,20 +69,19 @@ app.post('/users', function (req, res) {
 //# Read Data 
 //? Example : localhost:1010/users
 app.get('/users', function (req, res) {
+  var getAllResult = []
 
   db.collection('users').get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
         console.log(doc.id, '=>', doc.data());
-        res.send('id : ' + doc.id)
+        getAllResult.push(doc.data())
       });
+      res.send(getAllResult)
     })
     .catch((err) => {
       console.log('Error getting documents', err);
     });
-
-  // res.status(200)
-  res.send('get all')
 })
 
 //? Example : localhost:1010/users/{studentId}
@@ -92,36 +91,20 @@ app.get('/users/:id', function (req, res) {
 
     .then(doc => {
       if (!doc.exists) {
-        // console.log('No such document!');
-        res.send('No such document');
+        console.log('Document not found')
+        res.status(404).end()       
       } else {
-        //~ Make object for get data from firebase and send to res.send in 1 line 
-        const result = {
-          id : doc.id,
-          firstname : doc.data().userFname,
-          lastname : doc.data().userLname,
-          email : doc.data().userEmail,
-          password : doc.data().userPassword,
-          level : doc.data().userLevel
-        }
+        var getOnceResult = []
+        getOnceResult.push(doc.data())
+
         console.log('Document data:', doc.data());
-        res.send(result)
+        res.send(getOnceResult)
       }
     })
     .catch(err => {
       console.log('Error getting document', err);
     });
 })
-
-//doc GET API DOCUMENTATION 
-//doc GET => localhost:1111/users
-//doc doc.id '=>' doc.data()			          : All user data
-//doc doc.id                                : user id
-//doc doc.id '=>' doc.data().userPassword	  : user password
-//doc doc.id '=>' doc.data().userFname	    : user first name
-//doc doc.id '=>' doc.data().userLname	    : user last name
-//doc doc.id '=>' doc.data().userEmail	    : user email
-//doc doc.id '=>' doc.data().userLevel	    : user level (leader[1] or normal[0])
 
 //! Function
 //# Registration Section
