@@ -1,28 +1,9 @@
-//! Express Setting
-const express = require('express')
-const app = express()
-const port = 3000
-
-//# GET METHOD (All)
-app.get('/aa', function (req, res) {
-    res.send('GET request to homepage')
-})
-
-//# GET METHOD (One)
-
-//# POST METHOD
-app.post('/', function (req, res) {
-    res.send('POST request to homepage')
-})
-
-//# PUT METHOD
-app.put('/', function (req, res) {
-    res.send('PUT request to homepage')
-})
-
-//# DELETE METHOD
-app.delete('/', function (req, res) {
-    res.send('DELETE request to homepage')
-})
-
-app.listen(port, () => console.log(`App running at port ${port}!`))
+//-- About comment color definition
+  //! Red     : Use for explain about "Main Topic" or "Keyword" of work
+  //? Blue    : Use for example how to use this section
+  //# Yellow  : Use for explain about "Sub Topic" 
+  //* Green   : Use for explain how is this section going to do 
+  //~ Pink    : Use for comment about what this code going to do
+  //todo      : definition as name "todo" is mean how about this is work
+  //important : definition as name "important" is mean this is  
+//---------------------------------------------------------------------//
