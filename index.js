@@ -63,9 +63,6 @@ app.post('/users', function (req, res) {
   res.json(id[email, password, level])
 })
 
-//doc POST API DOCUMENTATION
-
-
 //# Read Data 
 //? Example : localhost:1010/users
 app.get('/users', function (req, res) {
@@ -81,6 +78,7 @@ app.get('/users', function (req, res) {
     })
     .catch((err) => {
       console.log('Error getting documents', err);
+      res.status(404).end()
     });
 })
 
@@ -94,11 +92,8 @@ app.get('/users/:id', function (req, res) {
         console.log('Document not found')
         res.status(404).end()       
       } else {
-        var getOnceResult = []
-        getOnceResult.push(doc.data())
-
         console.log('Document data:', doc.data());
-        res.send(getOnceResult)
+        res.send(doc.data())
       }
     })
     .catch(err => {
