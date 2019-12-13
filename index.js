@@ -55,6 +55,7 @@ app.post('/users', function (req, res) {
   let docRef = db.collection('users').doc(id);
 
   let setAda = docRef.set({
+    userId : id,
     userEmail: email,
     userPassword: password,
     userLevel: 0
