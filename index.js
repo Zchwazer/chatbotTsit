@@ -50,18 +50,37 @@ app.post('/users', function (req, res) {
   checkLength(id, password)
 
   //~ Check student id is CPE student ?
-  checkCPE(id)
+  let stuRef = db.collection('students').doc(id);
+  let checkOnce = stuRef.get()
 
-  let docRef = db.collection('users').doc(id);
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('Document not found')
+        res.status(404).end()
+      } else {
+        //~ Get first name & last name
+        var fName = doc.data().stuFname 
+        var lName = doc.data().stuLname
+        
+        //~ Add data to users collection
+        let docRef = db.collection('users').doc(id);
 
-  let setAda = docRef.set({
-    userId : id,
-    userEmail: email,
-    userPassword: password,
-    userLevel: 0
-  });
+        let setAda = docRef.set({
+          userId: id,
+          userFname: fName,
+          userLname: lName,
+          userEmail: email,
+          userPassword: password,
+          userLevel: 0
+        });
 
-  res.json(id[email, password, level])
+        res.json(id[email, password, level])
+        res.status(201)
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+    });
 })
 
 //# Read Data 
@@ -76,6 +95,7 @@ app.get('/users', function (req, res) {
         getAllResult.push(doc.data())
       });
       res.send(getAllResult)
+      res.status(200)
     })
     .catch((err) => {
       console.log('Error getting documents', err);
@@ -91,10 +111,11 @@ app.get('/users/:id', function (req, res) {
     .then(doc => {
       if (!doc.exists) {
         console.log('Document not found')
-        res.status(404).end()       
+        res.status(404).end()
       } else {
         console.log('Document data:', doc.data());
         res.send(doc.data())
+        res.status(200)
       }
     })
     .catch(err => {
@@ -116,19 +137,4 @@ function checkLength(id, password) {
   if ((id.length || psLength) == false) {
     res.status(404).end();
   }
-}
-
-//* Check user is CPE ?
-function checkCPE(id) {
-  let userRef = db.collection('students').doc(id)
-  let getOnce = userRef.get()
-
-    .then(doc => {
-      if (!doc.exists) {
-        res.status(404).end();
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
-    });
 }
