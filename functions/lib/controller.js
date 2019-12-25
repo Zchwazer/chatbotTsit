@@ -1,8 +1,8 @@
 //-- About comment color definition
 //! Red     : Main Topic each section
 //? Blue    : Sub Topic each section
-//# Yellow  : Work of this section
-//* Green   : Example endpoint
+//# Yellow  : Example endpoint 
+//* Green   : Work of this section
 //~ Pink    : Explain function
 //---------------------------------------------------------------------//
 //! Initialize Cloud Firestore
@@ -18,8 +18,9 @@ let db = admin.firestore();
 //---------------------------------------------------------------------//
 //! User Collection Section
 //? Get All user
-//# List all user in 'users' collection 
-//* http://localhost:5000/newagent-47c20/us-central1/api/user
+//# Test => http://localhost:5000/newagent-47c20/us-central1/api/user
+//# Use  => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
+//* List all user in 'users' collection 
 //~ use in web app (admin) to look all of user in mobile app
 function getAllUser(req, res) {
     var userAllData = [];
@@ -40,8 +41,9 @@ function getAllUser(req, res) {
 }
 
 //? Get Once user
-//# Detail of once document of 'users' collection (find by id)
-//* http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
+//# for test => http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
+//# for use  => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
+//* Detail of once document of 'users' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
 function getOnceUser(req, res) {
     let userRef = db.collection('users').doc(req.params.id)
@@ -67,16 +69,16 @@ function getOnceUser(req, res) {
 }
 
 //? Add user
-//# Add .json data to 'users' collection
-//* 
+//#
+//* Add .json data to 'users' collection 
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
     return
 }
 
 //? Update user data
-//#  
-//* 
+//# 
+//*  
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
     return
