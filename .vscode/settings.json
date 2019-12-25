@@ -23,7 +23,8 @@
         {
             //? Blue
             "tag": "?",
-            "color": "#3498DB",
+            "color": "#0384fc",
+            //// 4d61ff
             "strikethrough": false,
             "backgroundColor": "transparent"
         },
@@ -45,6 +46,7 @@
             //~ Purple
             "tag": "~",
             "color": "#ff45ca",
+            //// a903fc
             "strikethrough": false,
             "backgroundColor": "transparent"
         },
@@ -56,7 +58,7 @@
             "backgroundColor": "transparent"
         },
         {
-            //important Sky
+            //doc Sky
             "tag": "doc",
             "color": "#00dfe3",
             "strikethrough": false,
