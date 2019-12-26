@@ -61,9 +61,9 @@ function getOnceUser(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/
 //* Add .json data to 'users' collection in cloud firestore
 //* .json body Example {
-//* 	"userId" : {Number},
-//* 	"userEmail": {Email},
-//* 	"userPassword": {String}
+//* 	"userId" : 1234567890123,
+//* 	"userEmail": testament@example.com,
+//* 	"userPassword": 123456
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
@@ -72,61 +72,43 @@ function addOnceUser(req, res) {
     var email = req.body.userEmail
     var password = req.body.userPassword
 
-    //~ Add data to users collection
-    let docRef = db.collection('users').doc(id);
+    // //~ Check student id & password length is == 13 ?
+    // additional.checkLength(id, password)
 
-    let setAda = docRef.set({
-        userId: id,
-        userEmail: email,
-        userPassword: password,
-        userLevel: 0
-    });
+    //~ Check student id is CPE student ?
+    let stuRef = db.collection('students').doc(id);
+    let checkOnce = stuRef.get()
 
-    return res.status(201)
+        .then(doc => {
+            if (!doc.exists) {
+                additional.error404();
+            } else {
+                //~ Get first name & last name
+                var fName = doc.data().stuFname
+                var lName = doc.data().stuLname
+
+                //~ Add data to users collection
+                let docRef = db.collection('users').doc(id);
+
+                let setAda = docRef.set({
+                    userId: id,
+                    userFname: fName,
+                    userLname: lName,
+                    userEmail: email,
+                    userPassword: password,
+                    userLevel: 0
+                });
+
+                return res.status(201)
                     .json({
                         status: 201,
                         data: "Add data into collection complete"
                     })
-
-    // //~ Check student id & password length is == 13 ?
-    // // additional.checkLength(id, password)
-
-    // //~ Check student id is CPE student ?
-    // let stuRef = db.collection('students').doc(id);
-    // let checkOnce = stuRef.get()
-
-    //     .then(doc => {
-    //         if (!doc.exists) {
-    //             additional.error404();
-    //         } else {
-    //             //~ Get first name & last name
-    //             userName.push(doc.data().stuFname)
-    //             userName.push(doc.data().stuLname)
-    //             var fName = doc.data().stuFname
-    //             var lName = doc.data().stuLname
-
-    //             //~ Add data to users collection
-    //             let docRef = db.collection('users').doc(id);
-
-    //             let setAda = docRef.set({
-    //                 userId: id,
-    //                 userFname: fName,
-    //                 userLname: lName,
-    //                 userEmail: email,
-    //                 userPassword: password,
-    //                 userLevel: 0
-    //             });
-
-    //             return res.status(201)
-    //                 .json({
-    //                     status: 201,
-    //                     data: "Add data into collection complete"
-    //                 })
-    //         }
-    //     })
-    //     .catch(err => {
-    //         additional.error404();
-    //     });
+            }
+        })
+        .catch(err => {
+            additional.error404();
+        });
 }
 
 //? Update user data
