@@ -12,7 +12,7 @@ const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 
 //* serviceAccount is json file to identify your firebase (Chatbot Project Test)
-var serviceAccount = require('./asset/newagent-47c20-firebase-adminsdk-jg99g-7f32e79e95.json');
+var serviceAccount = require('./asset/serviceAccountKey.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -47,7 +47,7 @@ app.post('/users', function (req, res) {
   var password = req.body.userPassword
 
   //~ Check student id & password length is == 13 ?
-  checkLength(id, password)
+  // checkLength(id, password)
 
   //~ Check student id is CPE student ?
   let stuRef = db.collection('students').doc(id);
