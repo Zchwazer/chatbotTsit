@@ -8,16 +8,13 @@
 //! Initialize Cloud Firestore
 const admin = require('firebase-admin');
 
-let serviceAccount = require('../asset/serviceAccountKey.json');
+let serviceAccount = require('../../asset/serviceAccountKey.json');
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
 let db = admin.firestore();
-//---------------------------------------------------------------------//
-//! Initialize Additional Function
-const additional = require('./additional');
 //---------------------------------------------------------------------//
 //! User Collection Section
 //? Get All user
@@ -34,7 +31,10 @@ function getAllUser(req, res) {
             return res.send(userAllData);
         })
         .catch((err) => {
-            return additional.error404();
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
         });
 }
 
@@ -47,13 +47,19 @@ function getOnceUser(req, res) {
     let getOnce = userRef.get()
         .then(doc => {
             if (!doc.exists) {
-                return additional.error404();
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
             } else {
                 return res.send(doc.data())
             }
         })
         .catch(err => {
-            return additional.error404();
+            return res.status(404).json({
+                status: 404,
+                data: "Error, user not found"
+            })
         });
 }
 
@@ -67,13 +73,15 @@ function getOnceUser(req, res) {
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
-    var userName = []
     var id = req.body.userId
     var email = req.body.userEmail
     var password = req.body.userPassword
 
-    // //~ Check student id & password length is == 13 ?
-    // additional.checkLength(id, password)
+    //~ Check student id & password length is == 13 ?
+    
+
+    //~ Check user already register ?
+    
 
     //~ Check student id is CPE student ?
     let stuRef = db.collection('students').doc(id);
@@ -81,7 +89,10 @@ function addOnceUser(req, res) {
 
         .then(doc => {
             if (!doc.exists) {
-                additional.error404();
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, this id is not computer engineering student"
+                })
             } else {
                 //~ Get first name & last name
                 var fName = doc.data().stuFname
@@ -107,7 +118,10 @@ function addOnceUser(req, res) {
             }
         })
         .catch(err => {
-            additional.error404();
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
         });
 }
 
@@ -117,11 +131,35 @@ function addOnceUser(req, res) {
 function updateOnceUser(req, res) {
     return
 }
+//---------------------------------------------------------------------//
+//! Additional Function
+//? Registration Section
+//* Check user and password length 
+function checkLength(id, password) {
+    //~ Check id length is == 13 because student id is = 13
+    var length = false
 
+    id.length != 13 ? length = false : length = true;
+    password.length != 6 ? length = false : length = true;
+
+    if (length == false) {
+        res.status(404)
+            .json({
+                status: 404,
+                data: "id or password length was incorrect"
+            });
+    }
+}
+
+//* Check account already register
+function checkRegister(){
+
+}
+//---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
     getAllUser,
     getOnceUser,
-    addOnceUser,
-    updateOnceUser
+    addOnceUser
+    // updateOnceUser
 }

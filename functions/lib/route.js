@@ -6,8 +6,8 @@
 //~ Pink    : Explain function
 //---------------------------------------------------------------------//
 const router = require('express').Router();
-const userController = require('./userController');
-const stuController = require('./stuController');
+const userController = require('./controller/user');
+const stuController = require('./controller/student');
 
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 //~ Use for get all user data in web app
