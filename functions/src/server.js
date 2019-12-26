@@ -2,7 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
+//---------------------------------------------------------------------//
+const admin = require('firebase-admin');
 
+let serviceAccount = require('../asset/serviceAccountKey.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+//---------------------------------------------------------------------//
 app.use(cors({
         origin: true
     }))
