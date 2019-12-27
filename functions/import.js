@@ -1,4 +1,4 @@
-//! Imports
+//! Initialize Firebase import - export
 const firestoreService = require('firestore-export-import');
 const firebaseConfig = require('./src/config');
 const serviceAccount = require('./asset/serviceAccountKey.json');
@@ -19,3 +19,6 @@ const jsonToFirestore = async () => {
 };
 
 jsonToFirestore();
+
+//# Use "node import.js" in cmd to import .json file to cloud firestore
+//~ should cd to functions before use firebase serve
