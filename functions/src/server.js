@@ -18,7 +18,7 @@ app.use(cors({
     .use(bodyParser.urlencoded({
         extended: false
     }))
-    .use("/", require("../lib/route"))
+    .use("/", require("../service/route"))
     .get('*', (_, res) => res.status(404)
         .json({
             status: 404,

@@ -71,44 +71,55 @@ function addOnceUser(req, res) {
     var email = req.body.userEmail
     var password = req.body.userPassword
 
-    //~ Check student id & password length is == 13 ?
-    
-
     //~ Check user already register ?
-    
-
-    //~ Check student id is CPE student ?
-    let stuRef = db.collection('students').doc(id);
-    let checkOnce = stuRef.get()
-
+    let userRef = db.collection('users').doc(id);
+    let checkUser = userRef.get()
         .then(doc => {
-            if (!doc.exists) {
+            if (doc.exists) {
                 return res.status(404).json({
                     status: 404,
-                    data: "Error, this id is not computer engineering student"
+                    data: "Error, this student has been already register"
                 })
             } else {
-                //~ Get first name & last name
-                var fName = doc.data().stuFname
-                var lName = doc.data().stuLname
+                //~ Check student id is CPE student ?
+                let stuRef = db.collection('students').doc(id);
+                let checkOnce = stuRef.get()
+                    .then(doc => {
+                        if (!doc.exists) {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, this id is not computer engineering student"
+                            })
+                        } else {
+                            //~ Get first name & last name
+                            var fName = doc.data().stuFname
+                            var lName = doc.data().stuLname
 
-                //~ Add data to users collection
-                let docRef = db.collection('users').doc(id);
+                            //~ Add data to users collection
+                            let docRef = db.collection('users').doc(id);
 
-                let setAda = docRef.set({
-                    userId: id,
-                    userFname: fName,
-                    userLname: lName,
-                    userEmail: email,
-                    userPassword: password,
-                    userLevel: 0
-                });
+                            let setAda = docRef.set({
+                                userId: id,
+                                userFname: fName,
+                                userLname: lName,
+                                userEmail: email,
+                                userPassword: password,
+                                userLevel: 0
+                            });
 
-                return res.status(201)
-                    .json({
-                        status: 201,
-                        data: "Add data into collection complete"
+                            return res.status(201)
+                                .json({
+                                    status: 201,
+                                    data: "Add data into collection complete"
+                                })
+                        }
                     })
+                    .catch(err => {
+                        return res.status(404).json({
+                            status: 404,
+                            data: "Error, some input was missing"
+                        })
+                    });
             }
         })
         .catch(err => {
@@ -146,7 +157,7 @@ function checkLength(id, password) {
 }
 
 //* Check account already register
-function checkRegister(){
+function checkRegister() {
 
 }
 //---------------------------------------------------------------------//
