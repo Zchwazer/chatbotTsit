@@ -134,7 +134,14 @@ function addOnceUser(req, res) {
 //# PUT METHOD => {test url}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
-    return
+    var id = req.body.userId
+    var level = req.body.userLevel
+
+    let userRef = db.collection()
+    return res.status(201).json({
+        status: 201,
+        data: "Student level change success"
+    })
 }
 //---------------------------------------------------------------------//
 //! Additional Function
