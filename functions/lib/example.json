@@ -1,0 +1,16 @@
+{
+    "collection_name": {
+      "doc_name1": {
+        "name": "aaa"
+      },
+      "doc_name2": {
+        "name": "bbb"
+      },
+      "doc_name3": {
+        "name": "ccc"
+      },
+      "doc_name4": {
+        "name": "ddd"
+      }
+    }
+  }
