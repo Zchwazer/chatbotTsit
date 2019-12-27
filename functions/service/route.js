@@ -37,4 +37,8 @@ router.get("/student" ,student.getAllStudent);
 //~ Use for get single student data in web app
 router.get("/student/:id" ,student.getOnceStudent);
 //---------------------------------------------------------------------//
+//! Subject Collection
+//---------------------------------------------------------------------//
+//! News Collection
+//---------------------------------------------------------------------//
 module.exports = router;
