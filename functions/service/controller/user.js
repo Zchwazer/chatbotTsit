@@ -144,34 +144,10 @@ function updateOnceUser(req, res) {
     })
 }
 //---------------------------------------------------------------------//
-//! Additional Function
-//? Registration Section
-//* Check user and password length 
-function checkLength(id, password) {
-    //~ Check id length is == 13 because student id is = 13
-    var length = false
-
-    id.length != 13 ? length = false : length = true;
-    password.length != 6 ? length = false : length = true;
-
-    if (length == false) {
-        res.status(404)
-            .json({
-                status: 404,
-                data: "id or password length was incorrect"
-            });
-    }
-}
-
-//* Check account already register
-function checkRegister() {
-
-}
-//---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
     getAllUser,
     getOnceUser,
-    addOnceUser
-    // updateOnceUser
+    addOnceUser,
+    updateOnceUser
 }
