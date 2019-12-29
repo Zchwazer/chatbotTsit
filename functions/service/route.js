@@ -25,7 +25,7 @@ router.use("/user" ,user.addOnceUser);
 
 //# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
 //~ Use for admin change user level in web app
-// router.put("/user/:user", user.updateOnceUser);
+router.put("/user/:id", user.updateOnceUser);
 //---------------------------------------------------------------------//
 //! Student Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student

@@ -134,14 +134,34 @@ function addOnceUser(req, res) {
 //# PUT METHOD => {test url}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
-    var id = req.body.userId
+    var id = req.params.id
     var level = req.body.userLevel
 
-    let userRef = db.collection()
-    return res.status(201).json({
-        status: 201,
-        data: "Student level change success"
-    })
+    let userRef = db.collection('users').doc(id)
+    let getRef = userRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                let setAda = userRef.set({
+                    userLevel: level
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
 }
 //---------------------------------------------------------------------//
 //! Export function to route
