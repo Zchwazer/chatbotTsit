@@ -146,7 +146,7 @@ function updateOnceUser(req, res) {
                     data: "Error, user not found"
                 })
             } else {
-                let setAda = userRef.set({
+                let setAda = userRef.update({
                     userLevel: level
                 });
 

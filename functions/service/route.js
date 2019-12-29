@@ -21,7 +21,7 @@ router.get("/user/:id" ,user.getOnceUser);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 //~ Use for registration section in user mobile application
-router.use("/user" ,user.addOnceUser);
+router.post("/user" ,user.addOnceUser);
 
 //# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
 //~ Use for admin change user level in web app
