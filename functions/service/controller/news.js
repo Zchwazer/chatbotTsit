@@ -79,6 +79,7 @@ function getTypeNews(req, res) {
         });
 }
 
+//! BREAK [Wait for Front End Design]
 //? Add news
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/
 //* Add .json data to 'news' collection in cloud firestore
