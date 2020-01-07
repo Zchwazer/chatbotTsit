@@ -50,7 +50,7 @@ router.get("/news/:id", news.getOnceNews);
 
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
 //~ Use for get single student data in web app
-router.get("/news/:type", news.getTypeNews);
+router.get("/news/filter/:type", news.getTypeNews);
 
 //---------------------------------------------------------------------//
 module.exports = router;

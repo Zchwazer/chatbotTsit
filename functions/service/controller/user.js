@@ -61,9 +61,9 @@ function getOnceUser(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/
 //* Add .json data to 'users' collection in cloud firestore
 //* .json body Example {
-//* 	"userId" : 1234567890123,
-//* 	"userEmail": testament@example.com,
-//* 	"userPassword": 123456
+//* 	"userId" : "1234567890123",
+//* 	"userEmail": "testament@example.com",
+//* 	"userPassword": "123456"
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {

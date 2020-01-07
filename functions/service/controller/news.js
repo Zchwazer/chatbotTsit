@@ -17,7 +17,7 @@ let db = admin.firestore();
 //~ use in mobile app to look all of news 
 function getAllNews(req, res) {
     var newsAllData = [];
-    db.collection('news').orderBy("Time","desc").get()
+    db.collection('news').orderBy("Time", "desc").get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 newsAllData.push(doc.data());
@@ -63,41 +63,72 @@ function getOnceNews(req, res) {
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
 function getTypeNews(req, res) {
-    var newsAllFilter = [];
-    let newsRef = db.collection('news').where("Type", "==", req.params.type);
-    let getOnce = newsRef.get()
-        .then(doc => {
-            if (!doc.exists) {
-                return res.status(404).json({
-                    status: 404,
-                    data: "Error, student not found"
-                })
-            } else {
-                newsAllFilter.push(doc.data());
-                return res.send(newsAllFilter)
-            }
-        })
-        .catch(err => {
-            return res.status(404).json({
-                status: 404,
-                data: "Error, student not found"
-            })
-        });
-
     // var newsAllFilter = [];
-    // db.collection('news').where("Type", "==", req.params.type).get()
-    //     .then((snapshot) => {
-    //         snapshot.forEach((doc) => {
+    // let newsRef = db.collection('news').where("Type", "==", req.params.type);
+    // let getOnce = newsRef.get()
+    //     .then(doc => {
+    //         if (!doc.exists) {
+    //             return console.log("Not Found A");
+    //             // res.status(404).json({
+    //             //     status: 404,
+    //             //     data: "Error, student not found"
+    //             // })
+    //         } else {
     //             newsAllFilter.push(doc.data());
-    //         });
-    //         return res.send(newsAllFilter);
+    //             return res.send(newsAllFilter)
+    //         }
     //     })
-    //     .catch((err) => {
-    //         return res.status(404).json({
-    //             status: 404,
-    //             data: "Error, endpoint not found"
-    //         })
+    //     .catch(err => {
+    //         return console.log("Error Something");
+    //         // res.status(404).json({
+    //         //     status: 404,
+    //         //     data: "Error, student not found"
+    //         // })
     //     });
+
+    var newsAllFilter = [];
+    db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                newsAllFilter.push(doc.data());
+            });
+            return res.send(newsAllFilter);
+        })
+        .catch((err) => {
+            return console.log("Error something i don't know")
+            // return res.status(404).json({
+            //     status: 404,
+            //     data: "Error, endpoint not found"
+            // })
+        });
+}
+
+//? Add news
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/
+//* Add .json data to 'news' collection in cloud firestore
+//* .json body Example {
+//*     "Topic" : "Hello World" 	
+//* 	"Description": "How to train your programming",
+//* 	"Time" : ""
+//*     "Type" : "A"
+//* }
+//~ use in web app for administrator on 
+function addOnceNews(req, res) {
+    var topic = req.body.Topic    
+    var description = req.body.Description
+    var dateTime = req.body.Time
+    var type = req.body.Type
+
+    //~ Add data to news collection
+    let docRef = db.collection('news').doc(id);
+
+    let setAda = docRef.set({
+        Id: doc(id),
+        Topic: topic,
+        Description: description,
+        Time: dateTime,
+        Type: type                   
+    });
 }
 
 //---------------------------------------------------------------------//
@@ -105,5 +136,6 @@ function getTypeNews(req, res) {
 module.exports = {
     getAllNews,
     getOnceNews,
-    getTypeNews
+    getTypeNews,
+    addOnceNews
 }
