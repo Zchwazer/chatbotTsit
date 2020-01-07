@@ -37,14 +37,13 @@ function getAllNews(req, res) {
 //* Detail of once document of 'news' collection (find by id)
 //~ use in mobile app to look once of news 
 function getOnceNews(req, res) {
-    // let stuRef = db.collection('news').where("Id" , "==" , req.params.id)
     let newsRef = db.collection('news').doc(req.params.id)
     let getOnce = newsRef.get()
         .then(doc => {
             if (!doc.exists) {
                 return res.status(404).json({
                     status: 404,
-                    data: "Error, student not found"
+                    data: "Error, News not found"
                 })
             } else {
                 return res.send(doc.data())
@@ -53,98 +52,31 @@ function getOnceNews(req, res) {
         .catch(err => {
             return res.status(404).json({
                 status: 404,
-                data: "Error, student not found"
+                data: "Error, endpoint not found"
             })
         });
 }
 
 //? Get Group news
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/{newsType}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filter/{newsType}
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
 function getTypeNews(req, res) {
-    //! METHOD 1 (FAILED)
-    // var newsAllFilter = [];
-    // let newsRef = db.collection('news').where("Type", "==", req.params.type);
-    // let getOnce = newsRef.get()
-    //     .then(doc => {
-    //         if (!doc.exists) {
-    //             return res.status(404).json({
-    //                 status: 404,
-    //                 data: "Error, 1"
-    //             })
-    //         } else {
-    //             newsAllFilter.push(doc.data());
-    //             return res.send(newsAllFilter)
-    //         }
-    //     })
-    //     .catch(err => {
-    //         res.status(404).json({
-    //             status: 404,
-    //             data: "Error, 2"
-    //         })
-    //     });
-
-    //! METHOD 2 (FAILED)
-    // var newsAllFilter = [];
-    // db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get()
-    //     .then((snapshot) => {
-    //         snapshot.forEach((doc) => {
-    //             newsAllFilter.push(doc.data());
-    //         });
-    //         return res.send(newsAllFilter);
-    //     })
-    //     .catch((err) => {            
-    //         return res.status(404).json({
-    //             status: 404,
-    //             data: "Error, 3"
-    //         })
-    //     });
-
-    //! METHOD 3 (FAILED)
-    // var newsAllFilter = [];
-    // let newsRef = db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get();
-    // let getData = newsRef.get()
-    //     .then(doc => {            
-    //         const result = doc.map(document => document.data());
-
-    //         if (!(result.length >= 1)) {
-    //             doc.forEach(doc => {
-    //                 newsAllFilter.push(doc.data());                    
-    //             });
-    //             return res.send(newsAllFilter);
-    //         }                        
-    //     })
-    //     .catch((err) => {
-    //         return res.status(404).json({
-    //             status: 404,
-    //             data: "Error, 4"
-    //         })
-    //     })
-
-    //! METHOD 4 
     var newsAllFilter = [];
-    let newsRef = db.collection('news').where("Type", "==", req.params.type);
-    let getOnce = newsRef.get()
-        .then(doc => {
-            const result = doc.map(document => document.data());
-            if (!(result.length>=1)) {
-                return res.status(404).json({
-                    status: 404,
-                    data: "Error, 5"
-                })
-            } else {
+    db.collection('news').where("Type", "==", req.params.type).get()
+        .then((snapshot) => {
+            console.log(snapshot.docs);
+            snapshot.forEach((doc) => {
                 newsAllFilter.push(doc.data());
-                return res.send(newsAllFilter)
-            }
+            });
+            return res.send(newsAllFilter);
         })
-        .catch(err => {
-            res.status(404).json({
+        .catch((err) => {                        
+            return res.status(404).json({
                 status: 404,
-                data: "Error, 6"
+                data: "Error, News type not found"
             })
         });
-
 }
 
 //? Add news
@@ -180,6 +112,5 @@ function addOnceNews(req, res) {
 module.exports = {
     getAllNews,
     getOnceNews,
-    getTypeNews,
-    addOnceNews
+    getTypeNews
 }

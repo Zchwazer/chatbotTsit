@@ -41,15 +41,15 @@ router.get("/student/:id" ,student.getOnceStudent);
 //---------------------------------------------------------------------//
 //! News Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/
-//~ Use for get single student data in web app
+//~ Use for get all news data in mobile app and web app
 router.get("/news/", news.getAllNews);
 
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
-//~ Use for get single student data in web app
+//~ Use for get single news data in mobile app and web app
 router.get("/news/:id", news.getOnceNews);
 
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
-//~ Use for get single student data in web app
+//~ Use for get all news data with filter in mobile app and web app
 router.get("/news/filter/:type", news.getTypeNews);
 
 //---------------------------------------------------------------------//

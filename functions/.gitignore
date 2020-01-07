@@ -1,2 +1,8 @@
+# Node Module 
 node_modules/
+
+# Library for import .JSON
 lib
+
+# Folder for test some function
+test
