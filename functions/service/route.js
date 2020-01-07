@@ -9,6 +9,7 @@
 const router = require('express').Router();
 const user = require('./controller/user');
 const student = require('./controller/student');
+const news = require('./controller/news');
 //---------------------------------------------------------------------//
 //! User Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
@@ -39,5 +40,17 @@ router.get("/student/:id" ,student.getOnceStudent);
 //! Subject Collection
 //---------------------------------------------------------------------//
 //! News Collection
+//# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/
+//~ Use for get single student data in web app
+router.get("/news/", news.getAllNews);
+
+//# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
+//~ Use for get single student data in web app
+router.get("/news/:id", news.getOnceNews);
+
+//# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
+//~ Use for get single student data in web app
+router.get("/news/:type", news.getTypeNews);
+
 //---------------------------------------------------------------------//
 module.exports = router;
