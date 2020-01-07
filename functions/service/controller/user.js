@@ -97,6 +97,7 @@ function addOnceUser(req, res) {
                             var major = doc.data().Major
                             var fac = doc.data().Faculty
                             var stat = doc.data().Status
+                            var deg = doc.data().Degree
 
                             //~ Add data to users collection
                             let docRef = db.collection('users').doc(id);
@@ -109,7 +110,8 @@ function addOnceUser(req, res) {
                                 Password: password,
                                 Major:major,
                                 Faculty:fac,
-                                Status:stat,                                
+                                Status:stat,
+                                Degree:deg,                                
                                 Level: 0
                             });
 
