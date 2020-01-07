@@ -61,15 +61,15 @@ function getOnceUser(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/
 //* Add .json data to 'users' collection in cloud firestore
 //* .json body Example {
-//* 	"userId" : "1234567890123",
-//* 	"userEmail": "testament@example.com",
-//* 	"userPassword": "123456"
+//* 	"Id" : "1234567890123",
+//* 	"Email": "testament@example.com",
+//* 	"Password": "123456"
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
-    var id = req.body.userId
-    var email = req.body.userEmail
-    var password = req.body.userPassword
+    var id = req.body.Id
+    var email = req.body.Email
+    var password = req.body.Password
 
     //~ Check user already register ?
     let userRef = db.collection('users').doc(id);
@@ -92,19 +92,25 @@ function addOnceUser(req, res) {
                             })
                         } else {
                             //~ Get first name & last name
-                            var fName = doc.data().stuFname
-                            var lName = doc.data().stuLname
+                            var thName = doc.data().NameTH
+                            var enName = doc.data().NameEN
+                            var major = doc.data().Major
+                            var fac = doc.data().Faculty
+                            var stat = doc.data().Status
 
                             //~ Add data to users collection
                             let docRef = db.collection('users').doc(id);
 
                             let setAda = docRef.set({
-                                userId: id,
-                                userFname: fName,
-                                userLname: lName,
-                                userEmail: email,
-                                userPassword: password,
-                                userLevel: 0
+                                Id: id,
+                                NameTH: thName,
+                                NameEN: enName,
+                                Email: email,
+                                Password: password,
+                                Major:major,
+                                Faculty:fac,
+                                Status:stat,                                
+                                Level: 0
                             });
 
                             return res.status(201)
@@ -134,8 +140,8 @@ function addOnceUser(req, res) {
 //# PUT METHOD => {test url}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
-    var id = req.params.id
-    var level = req.body.userLevel
+    var id = req.params.Id
+    var level = req.body.Level
 
     let userRef = db.collection('users').doc(id)
     let getRef = userRef.get()
@@ -147,7 +153,7 @@ function updateOnceUser(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
-                    userLevel: level
+                    Level: level
                 });
 
                 return res.status(201).json({

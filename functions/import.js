@@ -21,5 +21,10 @@ const jsonToFirestore = async () => {
 
 jsonToFirestore();
 
+//! if can't import should be check your node_modules is already have 'firestore-export-import' 
+
+//# Use "npm install firestore-export-import" to install node_modules
+
 //# Use "node import.js" in cmd to import .json file to cloud firestore
+
 //~ should cd to functions before use firebase serve
