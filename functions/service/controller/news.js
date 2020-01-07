@@ -63,44 +63,88 @@ function getOnceNews(req, res) {
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
 function getTypeNews(req, res) {
+    //! METHOD 1 (FAILED)
     // var newsAllFilter = [];
     // let newsRef = db.collection('news').where("Type", "==", req.params.type);
     // let getOnce = newsRef.get()
     //     .then(doc => {
     //         if (!doc.exists) {
-    //             return console.log("Not Found A");
-    //             // res.status(404).json({
-    //             //     status: 404,
-    //             //     data: "Error, student not found"
-    //             // })
+    //             return res.status(404).json({
+    //                 status: 404,
+    //                 data: "Error, 1"
+    //             })
     //         } else {
     //             newsAllFilter.push(doc.data());
     //             return res.send(newsAllFilter)
     //         }
     //     })
     //     .catch(err => {
-    //         return console.log("Error Something");
-    //         // res.status(404).json({
-    //         //     status: 404,
-    //         //     data: "Error, student not found"
-    //         // })
+    //         res.status(404).json({
+    //             status: 404,
+    //             data: "Error, 2"
+    //         })
     //     });
 
+    //! METHOD 2 (FAILED)
+    // var newsAllFilter = [];
+    // db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get()
+    //     .then((snapshot) => {
+    //         snapshot.forEach((doc) => {
+    //             newsAllFilter.push(doc.data());
+    //         });
+    //         return res.send(newsAllFilter);
+    //     })
+    //     .catch((err) => {            
+    //         return res.status(404).json({
+    //             status: 404,
+    //             data: "Error, 3"
+    //         })
+    //     });
+
+    //! METHOD 3 (FAILED)
+    // var newsAllFilter = [];
+    // let newsRef = db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get();
+    // let getData = newsRef.get()
+    //     .then(doc => {            
+    //         const result = doc.map(document => document.data());
+
+    //         if (!(result.length >= 1)) {
+    //             doc.forEach(doc => {
+    //                 newsAllFilter.push(doc.data());                    
+    //             });
+    //             return res.send(newsAllFilter);
+    //         }                        
+    //     })
+    //     .catch((err) => {
+    //         return res.status(404).json({
+    //             status: 404,
+    //             data: "Error, 4"
+    //         })
+    //     })
+
+    //! METHOD 4 
     var newsAllFilter = [];
-    db.collection('news').where("Type", "==", req.params.type).orderBy("Time", "desc").get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
+    let newsRef = db.collection('news').where("Type", "==", req.params.type);
+    let getOnce = newsRef.get()
+        .then(doc => {
+            const result = doc.map(document => document.data());
+            if (!(result.length>=1)) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, 5"
+                })
+            } else {
                 newsAllFilter.push(doc.data());
-            });
-            return res.send(newsAllFilter);
+                return res.send(newsAllFilter)
+            }
         })
-        .catch((err) => {
-            return console.log("Error something i don't know")
-            // return res.status(404).json({
-            //     status: 404,
-            //     data: "Error, endpoint not found"
-            // })
+        .catch(err => {
+            res.status(404).json({
+                status: 404,
+                data: "Error, 6"
+            })
         });
+
 }
 
 //? Add news
@@ -114,7 +158,7 @@ function getTypeNews(req, res) {
 //* }
 //~ use in web app for administrator on 
 function addOnceNews(req, res) {
-    var topic = req.body.Topic    
+    var topic = req.body.Topic
     var description = req.body.Description
     var dateTime = req.body.Time
     var type = req.body.Type
@@ -127,7 +171,7 @@ function addOnceNews(req, res) {
         Topic: topic,
         Description: description,
         Time: dateTime,
-        Type: type                   
+        Type: type
     });
 }
 
