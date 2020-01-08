@@ -32,6 +32,7 @@ function getAllUser(req, res) {
         });
 }
 
+
 //? Get Once user
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
 //* Detail of once document of 'users' collection (find by id)
@@ -53,6 +54,26 @@ function getOnceUser(req, res) {
             return res.status(404).json({
                 status: 404,
                 data: "Error, user not found"
+            })
+        });
+}
+
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/filter/{email}
+//* Detail of once document of 'users' collection (find by email)
+//~ use in mobile app to get data for display to mobile app
+function getOnceEmail(req, res) {
+    var newsAllFilter = [];
+    db.collection('users').where("Email", "==", req.params.email).get()
+        .then((snapshot) => {            
+            snapshot.forEach((doc) => {
+                newsAllFilter.push(doc.data());
+            });
+            return res.send(newsAllFilter);
+        })
+        .catch((err) => {                        
+            return res.status(404).json({
+                status: 404,
+                data: "Error, News type not found"
             })
         });
 }
@@ -176,6 +197,7 @@ function updateOnceUser(req, res) {
 module.exports = {
     getAllUser,
     getOnceUser,
+    getOnceEmail,
     addOnceUser,
     updateOnceUser
 }

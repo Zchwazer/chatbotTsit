@@ -20,6 +20,10 @@ router.get("/user" ,user.getAllUser);
 //~ Use for get single user data in user mobile app or web app
 router.get("/user/:id" ,user.getOnceUser);
 
+//# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filter/{userEmail}
+//~ Use for get single user data in user mobile app or web app (filter by email)
+router.get("/user/filter/:email", user.getOnceEmail)
+
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 //~ Use for registration section in user mobile application
 router.post("/user" ,user.addOnceUser);

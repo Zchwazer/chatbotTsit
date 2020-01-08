@@ -65,7 +65,6 @@ function getTypeNews(req, res) {
     var newsAllFilter = [];
     db.collection('news').where("Type", "==", req.params.type).get()
         .then((snapshot) => {
-            console.log(snapshot.docs);
             snapshot.forEach((doc) => {
                 newsAllFilter.push(doc.data());
             });
