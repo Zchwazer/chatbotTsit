@@ -11,7 +11,8 @@ const user = require('./controller/user');
 const student = require('./controller/student');
 const news = require('./controller/news');
 //---------------------------------------------------------------------//
-//! User Collection
+//! Application Programming Interface
+//? User Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 //~ Use for get all user data in web app
 router.get("/user" ,user.getAllUser);
@@ -31,8 +32,9 @@ router.post("/user" ,user.addOnceUser);
 //# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
 //~ Use for admin change user level in web app
 router.put("/user/:id", user.updateOnceUser);
+
 //---------------------------------------------------------------------//
-//! Student Collection
+//? Student Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student
 //~ Use for get all student data in web app
 router.get("/student" ,student.getAllStudent);
@@ -40,10 +42,25 @@ router.get("/student" ,student.getAllStudent);
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/{studentId}
 //~ Use for get single student data in web app
 router.get("/student/:id" ,student.getOnceStudent);
+
 //---------------------------------------------------------------------//
-//! Subject Collection
+//? Subject Collection
+
+
 //---------------------------------------------------------------------//
-//! News Collection
+//? Sec Collection
+
+
+//---------------------------------------------------------------------//
+//? Group Collection
+
+
+//---------------------------------------------------------------------//
+//? Work Collection
+
+
+//---------------------------------------------------------------------//
+//? News Collection
 //# GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/
 //~ Use for get all news data in mobile app and web app
 router.get("/news/", news.getAllNews);
