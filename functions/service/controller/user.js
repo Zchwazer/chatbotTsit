@@ -62,13 +62,19 @@ function getOnceUser(req, res) {
 //* Detail of once document of 'users' collection (find by email)
 //~ use in mobile app to get data for display to mobile app
 function getOnceEmail(req, res) {
-    var newsAllFilter = [];
+    var getUserByEmail = [];
     db.collection('users').where("Email", "==", req.params.email).get()
         .then((snapshot) => {            
             snapshot.forEach((doc) => {
-                newsAllFilter.push(doc.data());
+                getUserByEmail.push(doc.data());            
             });
-            return res.send(newsAllFilter);
+            if (getUserByEmail.length === 1){
+                let getOnce = getUserByEmail[0];
+                return res.send(getOnce);
+            }
+            else{
+                return res.send(getUserByEmail);
+            }            
         })
         .catch((err) => {                        
             return res.status(404).json({
