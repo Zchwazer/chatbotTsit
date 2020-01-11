@@ -12,7 +12,7 @@ const jsonToFirestore = async () => {
 
         //~ {...} is json file in lib that you want to import
         //~ await firestoreService.restore('./lib/{...}.json');
-        await firestoreService.restore('./lib/student.json');
+        await firestoreService.restore('./lib/example.json');
         console.log('Upload Success');
     } catch (error) {
         console.log(error);

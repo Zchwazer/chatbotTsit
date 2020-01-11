@@ -10,6 +10,7 @@ const router = require('express').Router();
 const user = require('./controller/user');
 const student = require('./controller/student');
 const news = require('./controller/news');
+const subject = require('./controller/subject');
 //---------------------------------------------------------------------//
 //! Application Programming Interface
 //? User Collection
@@ -53,8 +54,25 @@ router.get("/student/:id" ,student.getOnceStudent);
 
 //---------------------------------------------------------------------//
 //? Subject Collection
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/
+//~ Use for admin to get all subject in web app
+router.get("/subject/", subject.getAllSubject);
 
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/limit/{limitNumber}
+//~ Use for admin to get all subject in web app
+router.get("/subject/limit/:limit", subject.getLimitSubject);
 
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterType/{type}
+//~ Use for admin to get all subject in web app
+router.get("/subject/filterType/:type", subject.getFilterTypeSubject);
+
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterCredit/{credit}
+//~ Use for admin to get all subject in web app
+router.get("/subject/filterCredit/:credit", subject.getFilterCreditSubject);
+
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
+//~ Use for user or admin to get once subject in mobile app or web app
+router.get("/subject/:id", subject.getOnceSubject);
 //---------------------------------------------------------------------//
 //? Sec Collection
 

@@ -32,7 +32,6 @@ function getAllUser(req, res) {
         });
 }
 
-
 //? Get Once user
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
 //* Detail of once document of 'users' collection (find by id)
@@ -268,6 +267,10 @@ function updateUserEmail(req, res) {
             })
         });
 }
+//---------------------------------------------------------------------//
+//! WARNING
+//? User level 0 = Normal student
+//? User level 1 = Leader student (have priority to post new work in group)
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
