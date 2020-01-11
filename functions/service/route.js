@@ -29,9 +29,17 @@ router.get("/user/filter/:email", user.getOnceEmail)
 //~ Use for registration section in user mobile application
 router.post("/user" ,user.addOnceUser);
 
-//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/level/{userId}
 //~ Use for admin change user level in web app
-router.put("/user/:id", user.updateOnceUser);
+router.put("/user/level/:id", user.updateOnceUser);
+
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/changePassword/{userId}
+//~ Use for user change user password in web app
+router.put("/user/password/:id", user.updateUserPassword);
+
+//# Use => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/changeEmail/{userId}
+//~ Use for user change user email in web app
+router.put("/user/email/:id", user.updateUserEmail);
 
 //---------------------------------------------------------------------//
 //? Student Collection

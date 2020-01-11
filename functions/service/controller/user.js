@@ -88,6 +88,7 @@ function getOnceEmail(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/
 //* Add .json data to 'users' collection in cloud firestore
 //* .json body Example {
+//*     "UUID": "uuid"
 //* 	"Id" : "1234567890123",
 //* 	"Email": "testament@example.com",
 //* 	"Password": "123456"
@@ -97,7 +98,7 @@ function addOnceUser(req, res) {
     var id = req.body.Id
     var email = req.body.Email
     var password = req.body.Password
-
+    
     //~ Check user already register ?
     let userRef = db.collection('users').doc(id);
     let checkUser = userRef.get()
@@ -125,12 +126,13 @@ function addOnceUser(req, res) {
                             var fac = doc.data().Faculty
                             var stat = doc.data().Status
                             var deg = doc.data().Degree
+                            var studentId = doc.data().Id
 
                             //~ Add data to users collection
-                            let docRef = db.collection('users').doc(id);
+                            let docRef = db.collection('users').doc(studentId);
 
                             let setAda = docRef.set({
-                                Id: id,
+                                Id: studentId,
                                 NameTH: thName,
                                 NameEN: enName,
                                 Email: email,
@@ -166,12 +168,12 @@ function addOnceUser(req, res) {
 }
 
 //? Update user data
-//# PUT METHOD => {test url}
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/level/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
-function updateOnceUser(req, res) {
-    var id = req.params.Id
-    var level = req.body.Level
-
+function updateOnceUser(req, res) {    
+    var id = req.params.id
+    var level = req.body.Level    
+    
     let userRef = db.collection('users').doc(id)
     let getRef = userRef.get()
         .then(doc => {
@@ -198,6 +200,74 @@ function updateOnceUser(req, res) {
             })
         });
 }
+
+//? Update user password
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/password/{userId}
+//~ use in web app for administrator to change level of user from "student" to "leader"
+function updateUserPassword(req, res) {
+    var id = req.params.id
+    var password = req.body.Password
+
+    let userRef = db.collection('users').doc(id)
+    let getRef = userRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                let setAda = userRef.update({
+                    Password: password
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+
+//? Update user email
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/email/{userId}
+//~ use in web app for administrator to change level of user from "student" to "leader"
+function updateUserEmail(req, res) {
+    var id = req.params.id
+    var email = req.body.Email
+
+    let userRef = db.collection('users').doc(id)
+    let getRef = userRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                let setAda = userRef.update({
+                    Email: email
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User email has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
@@ -205,5 +275,7 @@ module.exports = {
     getOnceUser,
     getOnceEmail,
     addOnceUser,
-    updateOnceUser
+    updateOnceUser,
+    updateUserPassword,
+    updateUserEmail
 }
