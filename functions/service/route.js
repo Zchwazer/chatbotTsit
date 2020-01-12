@@ -1,14 +1,15 @@
 //-- About comment color definition
-//! Red     : TOPIC
+//! Red     : DELETE
 //? Blue    : PUT
 //# Yellow  : POST 
 //* Green   : GET
-//~ Pink    : DELETE
+//~ Pink    : TOPIC
 //---------------------------------------------------------------------//
-//! Initialize configuration
+//~ Initialize configuration
 const router = require('express').Router();
+
 //---------------------------------------------------------------------//
-//! Initialize controller
+//~ Initialize controller
 const user = require('./controller/user');
 const student = require('./controller/student');
 const news = require('./controller/news');
@@ -17,8 +18,9 @@ const sec = require('./controller/sec');
 const teacher = require('./controller/teacher');
 const group = require('./controller/group');
 const work = require('./controller/work');
+
 //---------------------------------------------------------------------//
-//! User Collection
+//~ User Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 router.get("/user" ,user.getAllUser);
 
@@ -44,7 +46,7 @@ router.put("/user/updatePs/:id", user.updateUserPassword);
 router.put("/user/updateEm/:id", user.updateUserEmail);
 
 //---------------------------------------------------------------------//
-//! Student Collection
+//~ Student Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student
 router.get("/student" ,student.getAllStudent);
 
@@ -52,7 +54,7 @@ router.get("/student" ,student.getAllStudent);
 router.get("/student/:id" ,student.getOnceStudent);
 
 //---------------------------------------------------------------------//
-//! News Collection
+//~ News Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news
 router.get("/news", news.getAllNews);
 
@@ -62,8 +64,11 @@ router.get("/news/:id", news.getOnceNews);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/filterTp/{type}
 router.get("/news/filterTp/:type", news.getFilterTypeNews);
 
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/
+router.post("/news", news.addOnceNews);
+
 //---------------------------------------------------------------------//
-//! Subject Collection
+//~ Subject Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
 router.get("/subject", subject.getAllSubject);
 
@@ -110,7 +115,7 @@ router.put("/subject/updateTp/:id", subject.updateTypeSubject);
 router.put("/subject/updateAv/:id", subject.updateAvailableSubject);
 
 //---------------------------------------------------------------------//
-//! Sec Collection
+//~ Sec Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
 router.get("/subject/:id", subject.getOnceSubject);
 
@@ -118,11 +123,11 @@ router.get("/subject/:id", subject.getOnceSubject);
 router.get("/subject/:id", subject.getOnceSubject);
 
 //---------------------------------------------------------------------//
-//! Group Collection
+//~ Group Collection
 
 
 //---------------------------------------------------------------------//
-//! Work Collection
+//~ Work Collection
 
 
 //---------------------------------------------------------------------//

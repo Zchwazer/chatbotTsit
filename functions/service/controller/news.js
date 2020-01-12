@@ -10,6 +10,10 @@ const admin = require('firebase-admin');
 
 let db = admin.firestore();
 //---------------------------------------------------------------------//
+//! Initialize UUID
+const uuidV4 = require('uuid/v4');
+
+//---------------------------------------------------------------------//
 //! User Collection Section
 //? Get All news
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news
@@ -17,7 +21,7 @@ let db = admin.firestore();
 //~ use in mobile app to look all of news 
 function getAllNews(req, res) {
     var newsAllData = [];
-    db.collection('news').orderBy("Time", "desc").get()
+    db.collection('news').get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 newsAllData.push(doc.data());
@@ -65,12 +69,12 @@ function getFilterTypeNews(req, res) {
     var newsAllFilter = [];
     db.collection('news').where("Type", "==", req.params.type).get()
         .then((snapshot) => {
-            snapshot.forEach((doc) => {                
+            snapshot.forEach((doc) => {
                 newsAllFilter.push(doc.data());
             });
             return res.send(newsAllFilter);
         })
-        .catch((err) => {                        
+        .catch((err) => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, News type not found"
@@ -78,39 +82,87 @@ function getFilterTypeNews(req, res) {
         });
 }
 
-//! BREAK [Wait for Front End Design]
 //? Add news
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/
 //* Add .json data to 'news' collection in cloud firestore
 //* .json body Example {
 //*     "Topic" : "Hello World" 	
 //* 	"Description": "How to train your programming",
-//* 	"Time" : ""
+//* 	"Day" : "01",
+//*     "Month": "12",
+//*     "Year": "2562",
 //*     "Type" : "A"
 //* }
-//~ use in web app for administrator on 
+//~ use in web app for administrator on web app
 function addOnceNews(req, res) {
+    //~ Initialize UUID
+    uuid = uuidV4();
+
+    //~ Define variable
     var topic = req.body.Topic
-    var description = req.body.Description
-    var dateTime = req.body.Time
+    var des = req.body.Description
+    var day = req.body.Day
+    var mon = req.body.Month
+    var year = req.body.Year
     var type = req.body.Type
 
+    //~ Change Month to text
+    switch (mon) {
+        case "1": mon = "มกราคม"
+            break;
+        case "2": mon = "กุมภาพันธ์"
+            break;
+        case "3": mon = "มีนาคม"
+            break;
+        case "4": mon = "เมษายน"
+            break;
+        case "5": mon = "พฤษภาคม"
+            break;
+        case "6": mon = "มิถุนายน"
+            break;
+        case "7": mon = "กรกฎาคม"
+            break;
+        case "8": mon = "สิงหาคม"
+            break;
+        case "9": mon = "กันยายน"
+            break;
+        case "10": mon = "ตุลาคม"
+            break;
+        case "11": mon = "พฤศจิกายน"
+            break;
+        case "12": mon = "ธันวาคม"
+            break;
+    }
+
     //~ Add data to news collection
-    let docRef = db.collection('news').doc(id);
+    let newsRef = db.collection('news').doc(uuid);
 
-    let setAda = docRef.set({
-        Id: doc(id),
+    let setAda = newsRef.set({
+        Id: uuid,
         Topic: topic,
-        Description: description,
-        Time: dateTime,
-        Type: type
+        Description: des,
+        Day: day,
+        Month: mon,
+        Year: year,
+        Type: type,
+        Status: 1
     });
-}
 
+    return res.status(201)
+        .json({
+            status: 201,
+            data: "Add news into collection complete"
+        })
+}
+//---------------------------------------------------------------------//
+//! WARNING
+//? News status 0 = Hidden
+//? News status 1 = Show
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
     getAllNews,
+    getFilterTypeNews,
     getOnceNews,
-    getFilterTypeNews
+    addOnceNews
 }
