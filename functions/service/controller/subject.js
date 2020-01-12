@@ -158,6 +158,58 @@ function getLimitFilterCreditSubject(req, res) {
         });
 }
 
+//? Get All subjects (Filter available)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{available}
+//* List all user in 'subjects' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getFilterAvailableSubject(req, res) {
+    var subjectAllData = [];
+    db.collection('subjects').where("Available", "==", parseInt(req.params.available)).get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                subjectAllData.push(doc.data());
+            });
+            if (subjectAllData === 1) {
+                let subjectOnceData = subjectAllData[0]
+                return res.send(subjectOnceData);
+            } else {
+                return res.send(subjectAllData);
+            }
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
+//? Get All subjects (Filter available & Limit)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{available}/{limitNumber}
+//* List all user in 'subjects' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getLimitFilterAvailableSubject(req, res) {
+    var subjectAllData = [];
+    db.collection('subjects').where("Available", "==", parseInt(req.params.available)).limit(parseInt(req.params.limit)).get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                subjectAllData.push(doc.data());
+            });
+            if (subjectAllData === 1) {
+                let subjectOnceData = subjectAllData[0]
+                return res.send(subjectOnceData);
+            } else {
+                return res.send(subjectAllData);
+            }
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
 //? Get Once subject
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{subjectId}
 //* Detail of once document of 'users' collection (find by id)
@@ -190,7 +242,8 @@ function getOnceSubject(req, res) {
 //* 	"NameTH": "????",
 //*     "NameEN": "????",
 //*     "Credit" 3,
-//* 	"Type": 0
+//* 	"Type": 0,
+//*     "Available": 0
 //* }
 function addOnceSubject(req, res) {
     //~ Get Data from Body
@@ -199,6 +252,7 @@ function addOnceSubject(req, res) {
     var enName = req.body.NameEN
     var credit = req.body.Credit
     var type = req.body.Type
+    var ava = req.body.Available
 
     //~ Check subject already add ?
     let subjectRef = db.collection('subjects').doc(id);
@@ -218,7 +272,8 @@ function addOnceSubject(req, res) {
                     NameTH: thName,
                     NameEN: enName,
                     Credit: credit,
-                    Type: type
+                    Type: type,
+                    Available: ava
                 });
 
                 return res.status(201)
@@ -374,9 +429,13 @@ function updateTypeSubject(req, res) {
         });
 }
 //---------------------------------------------------------------------//
-//! WARNING
+//! WARNING TYPE
 //? Subject type 0 = Compulsory subject
 //? Subject type 1 = Elective subject
+//---------------------------------------------------------------------//
+//! WARNING AVAILABLE
+//? Subject available 0 = Close subject
+//? Subject available 1 = Open subject
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
@@ -386,6 +445,8 @@ module.exports = {
     getLimitFilterTypeSubject,
     getFilterCreditSubject,
     getLimitFilterCreditSubject,
+    getFilterAvailableSubject,
+    getLimitFilterAvailableSubject,
     getOnceSubject,
     addOnceSubject,
     updateNameThSubject,

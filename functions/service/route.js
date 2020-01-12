@@ -76,6 +76,12 @@ router.get("/subject/filterCr/:credit", subject.getFilterCreditSubject);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterCr/{credit}/{limitNumber}
 router.get("/subject/filterCr/:credit/:limit", subject.getLimitFilterCreditSubject);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterAv/{available}
+router.get("/subject/filterAv/:available", subject.getFilterAvailableSubject);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterAv/{available}/{limitNumber}
+router.get("/subject/filterAv/:available/:limit", subject.getLimitFilterAvailableSubject);
+
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
 router.get("/subject/:id", subject.getOnceSubject);
 
