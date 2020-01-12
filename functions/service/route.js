@@ -7,10 +7,16 @@
 //---------------------------------------------------------------------//
 //! Initialize configuration
 const router = require('express').Router();
+//---------------------------------------------------------------------//
+//! Initialize controller
 const user = require('./controller/user');
 const student = require('./controller/student');
 const news = require('./controller/news');
 const subject = require('./controller/subject');
+const sec = require('./controller/sec');
+const teacher = require('./controller/teacher');
+const group = require('./controller/group');
+const work = require('./controller/work');
 //---------------------------------------------------------------------//
 //! User Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
@@ -105,7 +111,11 @@ router.put("/subject/updateAv/:id", subject.updateAvailableSubject);
 
 //---------------------------------------------------------------------//
 //! Sec Collection
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
+router.get("/subject/:id", subject.getOnceSubject);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
+router.get("/subject/:id", subject.getOnceSubject);
 
 //---------------------------------------------------------------------//
 //! Group Collection
