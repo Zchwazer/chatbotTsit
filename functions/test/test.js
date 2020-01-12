@@ -10,15 +10,14 @@ admin.initializeApp({
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //# Test Section
-var x = 6;
-switch (x) {
-    case 0:
-        console.log("My Name is A")
-        break;
-    case 1:
-        console.log("My Name Is B")
-        break;
-    default:
-        console.log("My Name Is C")
-        break;
-}
+var allData = [];
+db.collection('users').limit(2).get()
+    .then((snapshot) => {
+        snapshot.forEach((doc) => {
+            allData.push(doc.data());
+        });
+        console.log(allData)
+    })
+    .catch((err) => {
+        console.log(err)
+    });

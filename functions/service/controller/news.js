@@ -61,7 +61,7 @@ function getOnceNews(req, res) {
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filter/{newsType}
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
-function getTypeNews(req, res) {
+function getFilterTypeNews(req, res) {
     var newsAllFilter = [];
     db.collection('news').where("Type", "==", req.params.type).get()
         .then((snapshot) => {
@@ -112,5 +112,5 @@ function addOnceNews(req, res) {
 module.exports = {
     getAllNews,
     getOnceNews,
-    getTypeNews
+    getFilterTypeNews
 }

@@ -87,7 +87,6 @@ function getOnceEmail(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/
 //* Add .json data to 'users' collection in cloud firestore
 //* .json body Example {
-//*     "UUID": "uuid"
 //* 	"Id" : "1234567890123",
 //* 	"Email": "testament@example.com",
 //* 	"Password": "123456"

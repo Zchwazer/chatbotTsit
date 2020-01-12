@@ -32,14 +32,13 @@ function getAllSubject(req, res) {
         });
 }
 
-//? Get All subjects (Limit query)
+//? Get All subjects (Limit)
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/limit/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getLimitSubject(req, res) {
-    var limit = req.params.limit
+function getLimitSubject(req, res) {    
     var subjectAllData = [];
-    let subRef = db.collection('subjects').limit(limit)
+    let subRef = db.collection('subjects').limit(parseInt(req.params.limit))
     let getRef = subRef.get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
@@ -109,6 +108,33 @@ function getFilterCreditSubject(req, res) {
         });
 }
 
+//? Get All subjects (Filter credit & Limit)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterCredit/{type}/{number}
+//* List all user in 'subjects' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getLimitFilterCreditSubject(req, res) {    
+    var subjectAllData = [];
+    db.collection('subjects').where("Credit","==",parseInt(req.params.credit)).limit(parseInt(req.params.limit)).get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {                
+                subjectAllData.push(doc.data());
+            });            
+            if (subjectAllData === 1){
+                let subjectOnceData = subjectAllData[0]
+                return res.send(subjectOnceData);
+            }
+            else{
+                return res.send(subjectAllData);
+            }
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
 //? Get Once subject
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{subjectId}
 //* Detail of once document of 'users' collection (find by id)
@@ -132,6 +158,20 @@ function getOnceSubject(req, res) {
             })
         });
 }
+
+//? Add subject
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject
+//* Add .json data to 'users' collection in cloud firestore
+//* .json body Example {
+//* 	"Id" : "04000302",
+//* 	"NameTH": "????",
+//*     "NameEN": "????",
+//*     "Credit" 3,
+//* 	"Type": 0
+//* }
+function addOnceSubject(req,res){
+
+}
 //---------------------------------------------------------------------//
 //! WARNING
 //? Subject type 0 = Compulsory subject
@@ -143,5 +183,7 @@ module.exports = {
     getLimitSubject,
     getFilterTypeSubject,
     getFilterCreditSubject,
-    getOnceSubject
+    getLimitFilterCreditSubject,
+    getOnceSubject,
+    addOnceSubject
 }
