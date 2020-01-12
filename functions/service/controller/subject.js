@@ -36,7 +36,7 @@ function getAllSubject(req, res) {
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/limit/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getLimitSubject(req, res) {    
+function getLimitSubject(req, res) {
     var subjectAllData = [];
     let subRef = db.collection('subjects').limit(parseInt(req.params.limit))
     let getRef = subRef.get()
@@ -55,21 +55,46 @@ function getLimitSubject(req, res) {
 }
 
 //? Get All subjects (Filter type)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterType/{type}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterTp/{type}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getFilterTypeSubject(req, res) {    
+function getFilterTypeSubject(req, res) {
     var subjectAllData = [];
-    db.collection('subjects').where("Type","==",parseInt(req.params.type)).get()
+    db.collection('subjects').where("Type", "==", parseInt(req.params.type)).get()
         .then((snapshot) => {
-            snapshot.forEach((doc) => {                
+            snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
-            });            
-            if (subjectAllData === 1){
+            });
+            if (subjectAllData === 1) {
                 let subjectOnceData = subjectAllData[0]
                 return res.send(subjectOnceData);
+            } else {
+                return res.send(subjectAllData);
             }
-            else{
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
+//? Get All subjects (Filter type & Limit)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterTp/{type}/{number}
+//* List all user in 'subjects' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getLimitFilterTypeSubject(req, res) {
+    var subjectAllData = [];
+    db.collection('subjects').where("Type", "==", parseInt(req.params.type)).limit(parseInt(req.params.limit)).get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                subjectAllData.push(doc.data());
+            });
+            if (subjectAllData === 1) {
+                let subjectOnceData = subjectAllData[0]
+                return res.send(subjectOnceData);
+            } else {
                 return res.send(subjectAllData);
             }
         })
@@ -82,21 +107,20 @@ function getFilterTypeSubject(req, res) {
 }
 
 //? Get All subjects (Filter credit)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterCredit/{type}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterCr/{type}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getFilterCreditSubject(req, res) {    
+function getFilterCreditSubject(req, res) {
     var subjectAllData = [];
-    db.collection('subjects').where("Credit","==",parseInt(req.params.credit)).get()
+    db.collection('subjects').where("Credit", "==", parseInt(req.params.credit)).get()
         .then((snapshot) => {
-            snapshot.forEach((doc) => {                
+            snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
-            });            
-            if (subjectAllData === 1){
+            });
+            if (subjectAllData === 1) {
                 let subjectOnceData = subjectAllData[0]
                 return res.send(subjectOnceData);
-            }
-            else{
+            } else {
                 return res.send(subjectAllData);
             }
         })
@@ -109,21 +133,20 @@ function getFilterCreditSubject(req, res) {
 }
 
 //? Get All subjects (Filter credit & Limit)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterCredit/{type}/{number}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterCr/{type}/{number}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getLimitFilterCreditSubject(req, res) {    
+function getLimitFilterCreditSubject(req, res) {
     var subjectAllData = [];
-    db.collection('subjects').where("Credit","==",parseInt(req.params.credit)).limit(parseInt(req.params.limit)).get()
+    db.collection('subjects').where("Credit", "==", parseInt(req.params.credit)).limit(parseInt(req.params.limit)).get()
         .then((snapshot) => {
-            snapshot.forEach((doc) => {                
+            snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
-            });            
-            if (subjectAllData === 1){
+            });
+            if (subjectAllData === 1) {
                 let subjectOnceData = subjectAllData[0]
                 return res.send(subjectOnceData);
-            }
-            else{
+            } else {
                 return res.send(subjectAllData);
             }
         })
@@ -140,7 +163,7 @@ function getLimitFilterCreditSubject(req, res) {
 //* Detail of once document of 'users' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
 function getOnceSubject(req, res) {
-    let subRef = db.collection('subjects').doc(req.params.id).get()    
+    let subRef = db.collection('subjects').doc(req.params.id).get()
         .then(doc => {
             if (!doc.exists) {
                 return res.status(404).json({
@@ -169,8 +192,186 @@ function getOnceSubject(req, res) {
 //*     "Credit" 3,
 //* 	"Type": 0
 //* }
-function addOnceSubject(req,res){
+function addOnceSubject(req, res) {
+    //~ Get Data from Body
+    var id = req.body.Id
+    var thName = req.body.NameTH
+    var enName = req.body.NameEN
+    var credit = req.body.Credit
+    var type = req.body.Type
 
+    //~ Check subject already add ?
+    let subjectRef = db.collection('subjects').doc(id);
+    let checkSubject = subjectRef.get()
+        .then(doc => {
+            if (doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, this subject has been already add"
+                })
+            } else {
+                //~ Add data to users collection
+                let docRef = db.collection('subjects').doc(id);
+
+                let setAda = docRef.set({
+                    Id: id,
+                    NameTH: thName,
+                    NameEN: enName,
+                    Credit: credit,
+                    Type: type
+                });
+
+                return res.status(201)
+                    .json({
+                        status: 201,
+                        data: "Add subject into collection complete"
+                    })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+
+//? Update subject Name (Thai)
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateTh/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateNameThSubject(req, res) {    
+    var id = req.params.id
+    var thName = req.body.NameTH    
+    
+    let subjectRef = db.collection('subjects').doc(id)
+    let getRef = subjectRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, subject not found"
+                })
+            } else {
+                let setAda = subjectRef.update({
+                    NameTH: thName
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+
+//? Update subject Name (English)
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateEn/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateNameEnSubject(req, res) {    
+    var id = req.params.id
+    var enName = req.body.NameEN    
+    
+    let subjectRef = db.collection('subjects').doc(id)
+    let getRef = subjectRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, subject not found"
+                })
+            } else {
+                let setAda = subjectRef.update({
+                    NameEN: enName
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+
+//? Update subject Credit
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateCr/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateCreditSubject(req, res) {   
+    //~ Credit is integer 
+    var id = req.params.id
+    var credit = req.body.Credit    
+    
+    let subjectRef = db.collection('subjects').doc(id)
+    let getRef = subjectRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, subject not found"
+                })
+            } else {
+                let setAda = subjectRef.update({
+                    Credit: credit
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+
+//? Update subject Type
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateTp/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateTypeSubject(req, res) {    
+    //~ Type is integer 
+    var id = req.params.id
+    var type = req.body.Type    
+    
+    let subjectRef = db.collection('subjects').doc(id)
+    let getRef = subjectRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, subject not found"
+                })
+            } else {
+                let setAda = subjectRef.update({
+                    Type: type
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
 }
 //---------------------------------------------------------------------//
 //! WARNING
@@ -182,8 +383,13 @@ module.exports = {
     getAllSubject,
     getLimitSubject,
     getFilterTypeSubject,
+    getLimitFilterTypeSubject,
     getFilterCreditSubject,
     getLimitFilterCreditSubject,
     getOnceSubject,
-    addOnceSubject
+    addOnceSubject,
+    updateNameThSubject,
+    updateNameEnSubject,
+    updateCreditSubject,
+    updateTypeSubject
 }

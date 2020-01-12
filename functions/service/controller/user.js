@@ -32,6 +32,28 @@ function getAllUser(req, res) {
         });
 }
 
+//? Get All user (Limit)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/limit/{limitNumber}
+//* List all user in 'user' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getLimitUser(req, res) {
+    var userAllData = [];
+    let userRef = db.collection('users').limit(parseInt(req.params.limit))
+    let getRef = userRef.get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                userAllData.push(doc.data());
+            });
+            return res.send(userAllData);
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
 //? Get Once user
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
 //* Detail of once document of 'users' collection (find by id)
@@ -274,6 +296,7 @@ function updateUserEmail(req, res) {
 //! Export function to route
 module.exports = {
     getAllUser,
+    getLimitUser,
     getOnceUser,
     getOnceEmail,
     addOnceUser,
