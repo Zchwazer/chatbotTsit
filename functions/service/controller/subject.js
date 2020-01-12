@@ -428,6 +428,41 @@ function updateTypeSubject(req, res) {
             })
         });
 }
+
+//? Update subject Available
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateAv/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateAvailableSubject(req, res) {    
+    //~ Available is integer 
+    var id = req.params.id
+    var ava = req.body.Available    
+    
+    let subjectRef = db.collection('subjects').doc(id)
+    let getRef = subjectRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, subject not found"
+                })
+            } else {
+                let setAda = subjectRef.update({
+                    Type: ava
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
 //---------------------------------------------------------------------//
 //! WARNING TYPE
 //? Subject type 0 = Compulsory subject
@@ -452,5 +487,6 @@ module.exports = {
     updateNameThSubject,
     updateNameEnSubject,
     updateCreditSubject,
-    updateTypeSubject
+    updateTypeSubject,
+    updateAvailableSubject
 }

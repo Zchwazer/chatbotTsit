@@ -100,6 +100,9 @@ router.put("/subject/updateCr/:id", subject.updateCreditSubject);
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateTp/{subjectId}
 router.put("/subject/updateTp/:id", subject.updateTypeSubject);
 
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateAv/{subjectId}
+router.put("/subject/updateAv/:id", subject.updateAvailableSubject);
+
 //---------------------------------------------------------------------//
 //! Sec Collection
 
