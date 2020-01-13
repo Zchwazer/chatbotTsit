@@ -24,11 +24,11 @@ const work = require('./controller/work');
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 router.get("/user" ,user.getAllUser);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/limit/{limitNumber}
-router.get("/user/limit/:limit" ,user.getLimitUser);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{limitNumber}
+router.get("/user/:limit" ,user.getLimitUser);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{userId}
-router.get("/user/:id" ,user.getOnceUser);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterId/{userId}
+router.get("/user/filterId/:id" ,user.getOnceUser);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterEm/{userEmail}
 router.get("/user/filterEm/:email", user.getOnceEmail)
@@ -50,16 +50,16 @@ router.put("/user/updateEm/:id", user.updateUserEmail);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student
 router.get("/student" ,student.getAllStudent);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/{studentId}
-router.get("/student/:id" ,student.getOnceStudent);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterId/{studentId}
+router.get("/student/filterId/:id" ,student.getOnceStudent);
 
 //---------------------------------------------------------------------//
 //~ News Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news
 router.get("/news", news.getAllNews);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/{newsId}
-router.get("/news/:id", news.getOnceNews);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/filterId/{newsId}
+router.get("/news/filterId/:id", news.getOnceNews);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news/filterTp/{type}
 router.get("/news/filterTp/:type", news.getFilterTypeNews);
@@ -72,8 +72,8 @@ router.post("/news", news.addOnceNews);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
 router.get("/subject", subject.getAllSubject);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/limit/{limitNumber}
-router.get("/subject/limit/:limit", subject.getLimitSubject);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/{limitNumber}
+router.get("/subject/:limit", subject.getLimitSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterTp/{type}
 router.get("/subject/filterTp/:type", subject.getFilterTypeSubject);
@@ -93,8 +93,8 @@ router.get("/subject/filterSt/:status", subject.getFilterStatusSubject);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}/{limitNumber}
 router.get("/subject/filterSt/:status/:limit", subject.getLimitFilterStatusSubject);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
-router.get("/subject/:id", subject.getOnceSubject);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{subjectId}
+router.get("/subject/filterId/:id", subject.getOnceSubject);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
 router.post("/subject" ,subject.addOnceSubject);
@@ -111,16 +111,24 @@ router.put("/subject/updateCr/:id", subject.updateCreditSubject);
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateTp/{subjectId}
 router.put("/subject/updateTp/:id", subject.updateTypeSubject);
 
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateAv/{subjectId}
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateSt/{subjectId}
 router.put("/subject/updateSt/:id", subject.updateStatusSubject);
 
 //---------------------------------------------------------------------//
+//~ Teacher Collection
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/teacher
+router.get("/teacher", teacher.getAllTeacher);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/teacher/{limitNumber}
+router.get("/teacher/:limit", teacher.getAllLimitTeacher);
+
+//---------------------------------------------------------------------//
 //~ Sec Collection
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/{subjectId}
 router.get("/subject/:id", subject.getOnceSubject);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
-router.get("/subject/:id", subject.getOnceSubject);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/{subjectId}
+router.get("/subject/filterId/:id", subject.getOnceSubject);
 
 //---------------------------------------------------------------------//
 //~ Group Collection
