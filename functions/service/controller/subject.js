@@ -158,13 +158,13 @@ function getLimitFilterCreditSubject(req, res) {
         });
 }
 
-//? Get All subjects (Filter available)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{available}
+//? Get All subjects (Filter status)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterSt/{status}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getFilterAvailableSubject(req, res) {
+function getFilterStatusSubject(req, res) {
     var subjectAllData = [];
-    db.collection('subjects').where("Available", "==", parseInt(req.params.available)).get()
+    db.collection('subjects').where("Status", "==", parseInt(req.params.status)).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
@@ -184,13 +184,13 @@ function getFilterAvailableSubject(req, res) {
         });
 }
 
-//? Get All subjects (Filter available & Limit)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{available}/{limitNumber}
+//? Get All subjects (Filter status & Limit)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{status}/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getLimitFilterAvailableSubject(req, res) {
+function getLimitFilterStatusSubject(req, res) {
     var subjectAllData = [];
-    db.collection('subjects').where("Available", "==", parseInt(req.params.available)).limit(parseInt(req.params.limit)).get()
+    db.collection('subjects').where("Status", "==", parseInt(req.params.status)).limit(parseInt(req.params.limit)).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
@@ -243,7 +243,7 @@ function getOnceSubject(req, res) {
 //*     "NameEN": "????",
 //*     "Credit" 3,
 //* 	"Type": 0,
-//*     "Available": 0
+//*     "Status": 0
 //* }
 function addOnceSubject(req, res) {
     //~ Get Data from Body
@@ -252,7 +252,7 @@ function addOnceSubject(req, res) {
     var enName = req.body.NameEN
     var credit = req.body.Credit
     var type = req.body.Type
-    var ava = req.body.Available
+    var stat = req.body.Status
 
     //~ Check subject already add ?
     let subjectRef = db.collection('subjects').doc(id);
@@ -273,7 +273,7 @@ function addOnceSubject(req, res) {
                     NameEN: enName,
                     Credit: credit,
                     Type: type,
-                    Available: ava
+                    Status: stat
                 });
 
                 return res.status(201)
@@ -429,13 +429,13 @@ function updateTypeSubject(req, res) {
         });
 }
 
-//? Update subject Available
-//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateAv/{subjectId}
+//? Update subject Status
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateSt/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateAvailableSubject(req, res) {    
-    //~ Available is integer 
+function updateStatusSubject(req, res) {    
+    //~ Status is integer 
     var id = req.params.id
-    var ava = req.body.Available    
+    var stat = req.body.Status    
     
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
@@ -447,7 +447,7 @@ function updateAvailableSubject(req, res) {
                 })
             } else {
                 let setAda = subjectRef.update({
-                    Type: ava
+                    Status: stat
                 });
 
                 return res.status(201).json({
@@ -468,9 +468,9 @@ function updateAvailableSubject(req, res) {
 //? Subject type 0 = Compulsory subject
 //? Subject type 1 = Elective subject
 //---------------------------------------------------------------------//
-//! WARNING AVAILABLE
-//? Subject available 0 = Close subject
-//? Subject available 1 = Open subject
+//! WARNING STATUS
+//? Subject status 0 = Close subject
+//? Subject status 1 = Open subject
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
@@ -480,13 +480,13 @@ module.exports = {
     getLimitFilterTypeSubject,
     getFilterCreditSubject,
     getLimitFilterCreditSubject,
-    getFilterAvailableSubject,
-    getLimitFilterAvailableSubject,
+    getFilterStatusSubject,
+    getLimitFilterStatusSubject,
     getOnceSubject,
     addOnceSubject,
     updateNameThSubject,
     updateNameEnSubject,
     updateCreditSubject,
     updateTypeSubject,
-    updateAvailableSubject
+    updateStatusSubject
 }
