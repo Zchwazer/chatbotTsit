@@ -87,11 +87,11 @@ router.get("/subject/filterCr/:credit", subject.getFilterCreditSubject);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterCr/{credit}/{limitNumber}
 router.get("/subject/filterCr/:credit/:limit", subject.getLimitFilterCreditSubject);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterAv/{available}
-router.get("/subject/filterAv/:available", subject.getFilterAvailableSubject);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}
+router.get("/subject/filterSt/:status", subject.getFilterStatusSubject);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterAv/{available}/{limitNumber}
-router.get("/subject/filterAv/:available/:limit", subject.getLimitFilterAvailableSubject);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}/{limitNumber}
+router.get("/subject/filterSt/:status/:limit", subject.getLimitFilterStatusSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects{subjectId}
 router.get("/subject/:id", subject.getOnceSubject);
@@ -112,7 +112,7 @@ router.put("/subject/updateCr/:id", subject.updateCreditSubject);
 router.put("/subject/updateTp/:id", subject.updateTypeSubject);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateAv/{subjectId}
-router.put("/subject/updateAv/:id", subject.updateAvailableSubject);
+router.put("/subject/updateSt/:id", subject.updateStatusSubject);
 
 //---------------------------------------------------------------------//
 //~ Sec Collection
