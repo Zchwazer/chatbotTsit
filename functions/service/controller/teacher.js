@@ -17,7 +17,7 @@ let db = admin.firestore();
 //~ use in web app to look all of news 
 function getAllTeacher(req,res){
     var teacherAllData = [];
-    db.collection('teachers').get()
+    db.collection('teachers').orderBy("NameTH" , "asc").get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 teacherAllData.push(doc.data())
@@ -38,7 +38,7 @@ function getAllTeacher(req,res){
 //~ use in web app to look all of news 
 function getAllLimitTeacher(req,res){
     var teacherAllData = [];
-    db.collection('teachers').limit(parseInt(req.params.limit)).orderBy("NameTH" , "asc").startAt.get()
+    db.collection('teachers').limit(parseInt(req.params.limit)).orderBy("NameTH" , "asc").get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 teacherAllData.push(doc.data())
