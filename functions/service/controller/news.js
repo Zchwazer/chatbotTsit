@@ -11,6 +11,7 @@ const admin = require('firebase-admin');
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //! Initialize UUID
+//~ uuid/V4 = random uuid
 const uuidV4 = require('uuid/v4');
 
 //---------------------------------------------------------------------//
@@ -62,7 +63,7 @@ function getOnceNews(req, res) {
 }
 
 //? Get Group news
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filter/{newsType}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filterTp/{newsType}
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
 function getFilterTypeNews(req, res) {
@@ -95,64 +96,90 @@ function getFilterTypeNews(req, res) {
 //* }
 //~ use in web app for administrator on web app
 function addOnceNews(req, res) {
-    //~ Initialize UUID
-    uuid = uuidV4();
+    //~ Generate UUID 
+    var uuid = uuidV4()
 
-    //~ Define variable
-    var topic = req.body.Topic
-    var des = req.body.Description
-    var day = req.body.Day
-    var mon = req.body.Month
-    var year = req.body.Year
-    var type = req.body.Type
+    //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
+    let newsRef = db.collection('news').doc(uuid)
+    let getOnce = newsRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                //~ Define Another Variable
+                var topic = req.body.Topic
+                var des = req.body.Description
+                var day = req.body.Day
+                var mon = req.body.Month
+                var year = req.body.Year
+                var type = req.body.Type
 
-    //~ Change Month to text
-    switch (mon) {
-        case "1": mon = "มกราคม"
-            break;
-        case "2": mon = "กุมภาพันธ์"
-            break;
-        case "3": mon = "มีนาคม"
-            break;
-        case "4": mon = "เมษายน"
-            break;
-        case "5": mon = "พฤษภาคม"
-            break;
-        case "6": mon = "มิถุนายน"
-            break;
-        case "7": mon = "กรกฎาคม"
-            break;
-        case "8": mon = "สิงหาคม"
-            break;
-        case "9": mon = "กันยายน"
-            break;
-        case "10": mon = "ตุลาคม"
-            break;
-        case "11": mon = "พฤศจิกายน"
-            break;
-        case "12": mon = "ธันวาคม"
-            break;
-    }
+                //~ Change Month to text
+                switch (mon) {
+                    case "1":
+                        mon = "มกราคม"
+                        break;
+                    case "2":
+                        mon = "กุมภาพันธ์"
+                        break;
+                    case "3":
+                        mon = "มีนาคม"
+                        break;
+                    case "4":
+                        mon = "เมษายน"
+                        break;
+                    case "5":
+                        mon = "พฤษภาคม"
+                        break;
+                    case "6":
+                        mon = "มิถุนายน"
+                        break;
+                    case "7":
+                        mon = "กรกฎาคม"
+                        break;
+                    case "8":
+                        mon = "สิงหาคม"
+                        break;
+                    case "9":
+                        mon = "กันยายน"
+                        break;
+                    case "10":
+                        mon = "ตุลาคม"
+                        break;
+                    case "11":
+                        mon = "พฤศจิกายน"
+                        break;
+                    case "12":
+                        mon = "ธันวาคม"
+                        break;
+                }
 
-    //~ Add data to news collection
-    let newsRef = db.collection('news').doc(uuid);
+                let newsRef = db.collection('news').doc(uuid);
 
-    let setAda = newsRef.set({
-        Id: uuid,
-        Topic: topic,
-        Description: des,
-        Day: day,
-        Month: mon,
-        Year: year,
-        Type: type,
-        Status: 1
-    });
+                let setAda = newsRef.set({
+                    Id: uuid,
+                    Topic: topic,
+                    Description: des,
+                    Day: day,
+                    Month: mon,
+                    Year: year,
+                    Type: type,
+                    Status: 1
+                });
 
-    return res.status(201)
-        .json({
-            status: 201,
-            data: "Add news into collection complete"
+                return res.status(201)
+                    .json({
+                        status: 201,
+                        data: "Add news into collection complete"
+                    })
+            } else {
+                addOnceNews(req, res);
+            }
         })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
 }
 //---------------------------------------------------------------------//
 //! WARNING
