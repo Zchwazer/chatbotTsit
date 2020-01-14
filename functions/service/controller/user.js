@@ -115,12 +115,8 @@ function getOnceEmail(req, res) {
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
-    var id = req.body.Id
-    var email = req.body.Email
-    var password = req.body.Password
-    
     //~ Check user already register ?
-    let userRef = db.collection('users').doc(id);
+    let userRef = db.collection('users').doc(req.body.Id);
     let checkUser = userRef.get()
         .then(doc => {
             if (doc.exists) {
@@ -155,8 +151,8 @@ function addOnceUser(req, res) {
                                 Id: studentId,
                                 NameTH: thName,
                                 NameEN: enName,
-                                Email: email,
-                                Password: password,
+                                Email: req.body.Email,
+                                Password: req.body.Password,
                                 Major:major,
                                 Faculty:fac,
                                 Status:stat,
@@ -191,10 +187,7 @@ function addOnceUser(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/level/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {    
-    var id = req.params.id
-    var level = req.body.Level    
-    
-    let userRef = db.collection('users').doc(id)
+    let userRef = db.collection('users').doc(req.params.id)
     let getRef = userRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -204,7 +197,7 @@ function updateOnceUser(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
-                    Level: level
+                    Level: req.body.Level   
                 });
 
                 return res.status(201).json({
@@ -225,10 +218,7 @@ function updateOnceUser(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/password/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateUserPassword(req, res) {
-    var id = req.params.id
-    var password = req.body.Password
-
-    let userRef = db.collection('users').doc(id)
+    let userRef = db.collection('users').doc(req.params.id)
     let getRef = userRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -238,7 +228,7 @@ function updateUserPassword(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
-                    Password: password
+                    Password: req.body.Password
                 });
 
                 return res.status(201).json({
@@ -259,10 +249,7 @@ function updateUserPassword(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/email/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateUserEmail(req, res) {
-    var id = req.params.id
-    var email = req.body.Email
-
-    let userRef = db.collection('users').doc(id)
+    let userRef = db.collection('users').doc(req.params.id)
     let getRef = userRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -272,7 +259,7 @@ function updateUserEmail(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
-                    Email: email
+                    Email: req.body.Email
                 });
 
                 return res.status(201).json({

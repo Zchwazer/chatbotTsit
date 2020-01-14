@@ -156,6 +156,10 @@ router.get("/group/:limit", group.getLimitGroup);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterSj/{subjectId}
 router.get("/group/filterId/:id", group.getOnceGroup);
 
+//# POST => 
+
+//? PUT => 
+
 //---------------------------------------------------------------------//
 //~ Work Collection
 
