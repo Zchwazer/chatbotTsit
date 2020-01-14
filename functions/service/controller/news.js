@@ -181,6 +181,50 @@ function addOnceNews(req, res) {
             })
         });
 }
+
+//? Update news data
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateDt/{newsId}
+//~ use in web app for administrator to change news description
+function updateNewsData(req, res) {    
+    var id = req.params.id
+    var top = req.body.Topic    
+    var des = req.body.Description
+    var day = req.body.Day
+    var mon = req.body.Month
+    var yea = req.body.Year
+    var typ = req.body.Type    
+    
+    let newsRef = db.collection('news').doc(id)
+    let getRef = newsRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                let setAda = newsRef.update({
+                    Topic : top,
+                    Description: des,
+                    Day: day,
+                    Month: mon,
+                    Year: yea,
+                    Type: typ
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
 //---------------------------------------------------------------------//
 //! WARNING
 //? News status 0 = Hidden
@@ -191,5 +235,6 @@ module.exports = {
     getAllNews,
     getFilterTypeNews,
     getOnceNews,
-    addOnceNews
+    addOnceNews,
+    updateNewsData
 }

@@ -4,4 +4,7 @@ node_modules/
 # Library for import .JSON
 lib
 
+# Database in .csv
+db
+
 # Folder for test some function

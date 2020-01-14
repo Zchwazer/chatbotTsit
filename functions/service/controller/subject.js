@@ -65,12 +65,7 @@ function getFilterTypeSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({
@@ -91,12 +86,7 @@ function getLimitFilterTypeSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({
@@ -117,12 +107,7 @@ function getFilterCreditSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({
@@ -143,12 +128,7 @@ function getLimitFilterCreditSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({
@@ -169,12 +149,7 @@ function getFilterStatusSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({
@@ -195,12 +170,7 @@ function getLimitFilterStatusSubject(req, res) {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
             });
-            if (subjectAllData === 1) {
-                let subjectOnceData = subjectAllData[0]
-                return res.send(subjectOnceData);
-            } else {
-                return res.send(subjectAllData);
-            }
+            return res.send(subjectAllData);
         })
         .catch((err) => {
             return res.status(404).json({

@@ -33,7 +33,7 @@ function getAllUser(req, res) {
 }
 
 //? Get All user (Limit)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/limit/{limitNumber}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{limitNumber}
 //* List all user in 'user' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
 function getLimitUser(req, res) {
