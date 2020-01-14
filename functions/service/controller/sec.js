@@ -10,6 +10,11 @@ const admin = require('firebase-admin');
 
 let db = admin.firestore();
 //---------------------------------------------------------------------//
+//! Initialize UUID
+//~ uuid/V4 = random uuid
+const uuidV4 = require('uuid/v4');
+
+//---------------------------------------------------------------------//
 //! Sec Collection Section
 //? Get All Sec
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/sec
@@ -60,7 +65,7 @@ function getLimitSec(req, res) {
 //~ use in web app (admin) to look all of subject in web app
 function getFilterSubjectSection(req, res) {
     var subjectAllData = [];
-    db.collection('secs').where("Subject", "==", req.params.subject).get()
+    db.collection('secs').where("Subject", "==", req.params.id).get()
         .then((snapshot) => {
             snapshot.forEach((doc) => {
                 subjectAllData.push(doc.data());
@@ -104,24 +109,33 @@ function getOnceSection(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/secs/
 //* Add .json data to 'secs' collection in cloud firestore
 //* .json body Example {
-//*     "Sec": 1
-//*     "Subject" "04000302"
+//*     "Sec": 1,
+//*     "Subject" "04000302",
+//*     "Day": "01",
+//*     "Month": "12",
+//*     "Year": "2562"
 //* }
 //~ use in web app for administrator on web app
 function addOnceSection(req, res) {
     //~ Generate UUID 
-    var uuid = uuidV4()
+    var uuid = uuidV4();
+
+    //~ Generate Date
+    var date = [req.body.Day,getMonth(req.body.Month),req.body.Year];
 
     //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
-    let newsRef = db.collection('secs').doc(uuid)
-    let getOnce = newsRef.get()
+    let secRef = db.collection('secs').doc(uuid)
+    let getOnce = secRef.get()
         .then(doc => {
             if (!doc.exists) {
                 let secRef = db.collection('secs').doc(uuid);
 
                 let setAda = secRef.set({
+                    Id : uuid,
                     Sec: req.body.Sec,
                     Subject: req.body.Subject,
+                    CreateDate: date,
+                    UpdateDate: date,
                     Status: 1
                 });
 
@@ -152,14 +166,42 @@ function addOnceSection(req, res) {
 //*     "Year": "2562",
 //* }
 //~ use in web app for administrator to change level of user from "student" to "leader"
-function updateSectionStatus(req, res) {    
-    var id = req.params.id
-    var stat = req.body.Status
-    var day = req.body.Day
-    var mon = req.body.Month
-    var yea = req.body.Year
-    
-    //~ Change Month to text
+function updateSectionStatus(req, res) {
+    let secRef = db.collection('secs').doc(req.params.id)
+    let getRef = secRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {            
+                let setAda = secRef.update({
+                    Status: req.body.Status,
+                    UpdateDate: [req.body.Day, getMonth(req.body.Month), req.body.Year]
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
+//---------------------------------------------------------------------//
+//! WARNING STATUS
+//? Secs status 0 : Close section
+//? Secs status 1 : Open section
+//---------------------------------------------------------------------//
+//! FUNCTION
+//~ Transfer month from number to text
+function getMonth(mon) {
     switch (mon) {
         case "1":
             mon = "มกราคม"
@@ -198,40 +240,9 @@ function updateSectionStatus(req, res) {
             mon = "ธันวาคม"
             break;
     }
-    
-    let secRef = db.collection('secs').doc(id)
-    let getRef = secRef.get()
-        .then(doc => {
-            if (!doc.exists) {
-                return res.status(404).json({
-                    status: 404,
-                    data: "Error, user not found"
-                })
-            } else {
-                var date = [day, mon, yea]
-
-                let setAda = secRef.update({
-                    Status: stat,
-                    UpdateDate: date
-                });
-
-                return res.status(201).json({
-                    status: 201,
-                    data: "User has been update success"
-                })
-            }
-        })
-        .catch(err => {
-            return res.status(404).json({
-                status: 404,
-                data: "Error, some input was missing"
-            })
-        });
+    return mon;
 }
-//---------------------------------------------------------------------//
-//! WARNING STATUS
-//? Secs status 0 : Close section
-//? Secs status 1 : Open section
+
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {

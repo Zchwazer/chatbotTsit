@@ -104,64 +104,17 @@ function addOnceNews(req, res) {
     let getOnce = newsRef.get()
         .then(doc => {
             if (!doc.exists) {
-                //~ Define Another Variable
-                var topic = req.body.Topic
-                var des = req.body.Description
-                var day = req.body.Day
-                var mon = req.body.Month
-                var year = req.body.Year
-                var type = req.body.Type
-
-                //~ Change Month to text
-                switch (mon) {
-                    case "1":
-                        mon = "มกราคม"
-                        break;
-                    case "2":
-                        mon = "กุมภาพันธ์"
-                        break;
-                    case "3":
-                        mon = "มีนาคม"
-                        break;
-                    case "4":
-                        mon = "เมษายน"
-                        break;
-                    case "5":
-                        mon = "พฤษภาคม"
-                        break;
-                    case "6":
-                        mon = "มิถุนายน"
-                        break;
-                    case "7":
-                        mon = "กรกฎาคม"
-                        break;
-                    case "8":
-                        mon = "สิงหาคม"
-                        break;
-                    case "9":
-                        mon = "กันยายน"
-                        break;
-                    case "10":
-                        mon = "ตุลาคม"
-                        break;
-                    case "11":
-                        mon = "พฤศจิกายน"
-                        break;
-                    case "12":
-                        mon = "ธันวาคม"
-                        break;
-                }
-
+                //~ Define Another Variable            
                 let newsRef = db.collection('news').doc(uuid);
 
                 let setAda = newsRef.set({
                     Id: uuid,
-                    Topic: topic,
-                    Description: des,
-                    Day: day,
-                    Month: mon,
-                    Year: year,
-                    Type: type,
+                    Topic: req.body.Topic,
+                    Description: req.body.Description,
+                    Day: req.body.Day,
+                    Month: getMonth(req.body.Month),
+                    Year: req.body.Year,
+                    Type: req.body.Type,
                     Status: 1
                 });
 
@@ -185,16 +138,8 @@ function addOnceNews(req, res) {
 //? Update news data
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateDt/{newsId}
 //~ use in web app for administrator to change news description
-function updateNewsData(req, res) {    
-    var id = req.params.id
-    var top = req.body.Topic    
-    var des = req.body.Description
-    var day = req.body.Day
-    var mon = req.body.Month
-    var yea = req.body.Year
-    var typ = req.body.Type    
-    
-    let newsRef = db.collection('news').doc(id)
+function updateNewsData(req, res) {        
+    let newsRef = db.collection('news').doc(req.params.id)
     let getRef = newsRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -204,12 +149,12 @@ function updateNewsData(req, res) {
                 })
             } else {
                 let setAda = newsRef.update({
-                    Topic : top,
-                    Description: des,
-                    Day: day,
-                    Month: mon,
-                    Year: yea,
-                    Type: typ
+                    Topic : req.body.Topic,
+                    Description: req.body.Description,
+                    Day: req.body.Day,
+                    Month: req.body.Month,
+                    Year: req.body.Year,
+                    Type: req.body.Type
                 });
 
                 return res.status(201).json({
@@ -229,6 +174,50 @@ function updateNewsData(req, res) {
 //! WARNING
 //? News status 0 = Hidden
 //? News status 1 = Show
+//---------------------------------------------------------------------//
+//! FUNCTION
+function getMonth(mon){
+    //~ Change Month to text
+    switch (mon) {
+        case "1":
+            mon = "มกราคม"
+            break;
+        case "2":
+            mon = "กุมภาพันธ์"
+            break;
+        case "3":
+            mon = "มีนาคม"
+            break;
+        case "4":
+            mon = "เมษายน"
+            break;
+        case "5":
+            mon = "พฤษภาคม"
+            break;
+        case "6":
+            mon = "มิถุนายน"
+            break;
+        case "7":
+            mon = "กรกฎาคม"
+            break;
+        case "8":
+            mon = "สิงหาคม"
+            break;
+        case "9":
+            mon = "กันยายน"
+            break;
+        case "10":
+            mon = "ตุลาคม"
+            break;
+        case "11":
+            mon = "พฤศจิกายน"
+            break;
+        case "12":
+            mon = "ธันวาคม"
+            break;
+    }
+    return mon;
+}
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
