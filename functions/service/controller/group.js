@@ -200,39 +200,108 @@ function addOnceGroup(req, res) {
                     Sec: req.body.Sec
                 });
 
-                //~ Check student id is CPE student ?
-                let teachRef = db.collection('teachers').doc(req.body.Teacher);
-                let teachOnce = teachRef.get()
-                    .then(docTeach => {
-                        if (!docTeach.exists) {
+                //~ Check teacher is cpe teacher ?
+
+                //~ 1st Teacher of group must have !!! 
+                if (req.body.Teacher1 == "") {
+                    return res.status(404).json({
+                        status: 404,
+                        data: "Error, some input was missing"
+                    })
+                } else {
+                    let teachRef = db.collection('teachers').doc(req.body.Teacher1);
+                    let teachOnce = teachRef.get()
+                        .then(docTeach => {
+                            if (!docTeach.exists) {
+                                return res.status(404).json({
+                                    status: 404,
+                                    data: "Error, Teacher not found"
+                                })
+                            } else {
+                                //~ Add data to users collection
+                                let teacherDocRef = db.collection('groups').doc(uuid)
+                                    .collection('teachers').doc(req.body.Teacher1);
+
+                                let setAda = teacherDocRef.set({
+                                    Id: req.body.Teacher1,
+                                    NameTH: docTeach.data().NameTH,
+                                    NameEN: docTeach.data().NameEN
+                                });
+                            }
+                        })
+                        .catch(err => {
                             return res.status(404).json({
                                 status: 404,
-                                data: "Error, Teacher not found"
+                                data: "Error, some input was missing"
                             })
-                        } else {
-                            //~ Add data to users collection
-                            let teacherDocRef = db.collection('groups').doc(uuid)
-                                .collection('teachers').doc(req.body.Teacher);
+                        });
+                }
 
-                            let setAda = teacherDocRef.set({
-                                Id: req.body.Teacher,
-                                NameTH: docTeach.data().NameTH,
-                                NameEN: docTeach.data().NameEN
-                            });
+                //~ If Have 2nd Teacher
+                if(req.body.Teacher2 != ""){
+                    let teachRef = db.collection('teachers').doc(req.body.Teacher2);
+                    let teachOnce = teachRef.get()
+                        .then(docTeach => {
+                            if (!docTeach.exists) {
+                                return res.status(404).json({
+                                    status: 404,
+                                    data: "Error, Teacher not found"
+                                })
+                            } else {
+                                //~ Add data to users collection
+                                let teacherDocRef = db.collection('groups').doc(uuid)
+                                    .collection('teachers').doc(req.body.Teacher2);
 
-                            return res.status(201)
-                            .json({
-                                status: 201,
-                                data: "Add news into collection complete"
-                            })
-                        }
-                    })
-                    .catch(err => {
-                        return res.status(404).json({
-                            status: 404,
-                            data: "Error, some input was missing"
+                                let setAda = teacherDocRef.set({
+                                    Id: req.body.Teacher2,
+                                    NameTH: docTeach.data().NameTH,
+                                    NameEN: docTeach.data().NameEN
+                                });
+                            }
                         })
-                    });
+                        .catch(err => {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, some input was missing"
+                            })
+                        });
+                }
+
+                //~ If Have 3rd Teacher -> 3rd can be add if 2nd have teacher
+                if(req.body.Teacher2 != "" && req.body.Teacher3 != ""){
+                    let teachRef = db.collection('teachers').doc(req.body.Teacher3);
+                    let teachOnce = teachRef.get()
+                        .then(docTeach => {
+                            if (!docTeach.exists) {
+                                return res.status(404).json({
+                                    status: 404,
+                                    data: "Error, Teacher not found"
+                                })
+                            } else {
+                                //~ Add data to users collection
+                                let teacherDocRef = db.collection('groups').doc(uuid)
+                                    .collection('teachers').doc(req.body.Teacher3);
+
+                                let setAda = teacherDocRef.set({
+                                    Id: req.body.Teacher3,
+                                    NameTH: docTeach.data().NameTH,
+                                    NameEN: docTeach.data().NameEN
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, some input was missing"
+                            })
+                        });
+                }
+
+                return res.status(201)
+                .json({
+                    status: 201,
+                    data: "Add news into collection complete"
+                })
 
             } else {
                 return res.status(404).json({
