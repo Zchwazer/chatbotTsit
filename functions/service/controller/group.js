@@ -10,6 +10,11 @@ const admin = require('firebase-admin');
 
 let db = admin.firestore();
 //---------------------------------------------------------------------//
+//! Initialize UUID
+//~ uuid/V4 = random uuid
+const uuidV4 = require('uuid/v4');
+
+//---------------------------------------------------------------------//
 //! Group Collection Section
 //? Get All group
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group
@@ -55,7 +60,7 @@ function getLimitGroup(req, res) {
 }
 
 //? Get Once group
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/{groupId}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}
 //* Detail of once document of 'groups' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
 function getOnceGroup(req, res) {
@@ -79,7 +84,170 @@ function getOnceGroup(req, res) {
         });
 }
 
+//? Get All student in Group
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}/student
+//* List all group in 'groups' collection 
+//~ use in web app (admin) to look all of group in mobile app
+function getAllStudentGroup(req, res) {
+    var groupStudentAllData = [];
+    db.collection('groups').doc(req.params.id).collection('students').get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                groupStudentAllData.push(doc.data());
+            });
+            return res.send(groupStudentAllData);
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
 
+//? Get Once student in Group 
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}/student/{studentId}
+//* Detail of once document of 'groups' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function getOnceStudentGroup(req, res) {
+    let groupStudent = db.collection('groups').doc(req.params.id).collection('students').doc(req.params.student)
+    let getOnce = groupStudent.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, group not found"
+                })
+            } else {
+                return res.send(doc.data())
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, group not found"
+            })
+        });
+}
+
+//? Get All teacher in Group
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}/teacher
+//* List all group in 'groups' collection 
+//~ use in web app (admin) to look all of group in mobile app
+function getAllTeacherGroup(req, res) {
+    var groupTeacherAllData = [];
+    db.collection('groups').doc(req.params.id).collection('teachers').get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                groupTeacherAllData.push(doc.data());
+            });
+            return res.send(groupTeacherAllData);
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
+//? Get Once teacher in Group 
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}/teacher/{teacherId}
+//* Detail of once document of 'groups' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function getOnceTeacherGroup(req, res) {
+    let groupTeacher = db.collection('groups').doc(req.params.id).collection('teachers').doc(req.params.teacher)
+    let getOnce = groupTeacher.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, group not found"
+                })
+            } else {
+                return res.send(doc.data())
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, group not found"
+            })
+        });
+}
+
+//? Add group
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/
+//* Add .json data to 'secs' collection in cloud firestore
+//* .json body Example {
+//*     "Sec": "0a9a8b49-4568-4cb5-a963-0643162e5f76",
+//*     "Teacher": "33eb18d0-7744-4bff-b8ea-49a89b2bd02a"
+//* }
+//~ use in web app for administrator on web app
+function addOnceGroup(req, res) {
+    //~ Generate UUID 
+    var uuid = uuidV4();
+
+    //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
+    let groupRef = db.collection('groups').doc(uuid)
+    let getOnce = groupRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                let groupRef = db.collection('groups').doc(uuid);
+
+                let setAda = groupRef.set({
+                    Id: uuid,
+                    Sec: req.body.Sec
+                });
+
+                //~ Check student id is CPE student ?
+                let teachRef = db.collection('teachers').doc(req.body.Teacher);
+                let teachOnce = teachRef.get()
+                    .then(docTeach => {
+                        if (!docTeach.exists) {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, Teacher not found"
+                            })
+                        } else {
+                            //~ Add data to users collection
+                            let teacherDocRef = db.collection('groups').doc(uuid)
+                                .collection('teachers').doc(req.body.Teacher);
+
+                            let setAda = teacherDocRef.set({
+                                Id: req.body.Teacher,
+                                NameTH: docTeach.data().NameTH,
+                                NameEN: docTeach.data().NameEN
+                            });
+
+                            return res.status(201)
+                            .json({
+                                status: 201,
+                                data: "Add news into collection complete"
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        return res.status(404).json({
+                            status: 404,
+                            data: "Error, some input was missing"
+                        })
+                    });
+
+            } else {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, some input was missing"
+                })
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
 //---------------------------------------------------------------------//
 //! WARNING
 
@@ -88,5 +256,10 @@ function getOnceGroup(req, res) {
 module.exports = {
     getAllGroup,
     getLimitGroup,
-    getOnceGroup
+    getOnceGroup,
+    getAllStudentGroup,
+    getOnceStudentGroup,
+    getAllTeacherGroup,
+    getOnceTeacherGroup,
+    addOnceGroup
 }

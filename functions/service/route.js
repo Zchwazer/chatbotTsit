@@ -153,12 +153,24 @@ router.get("/group", group.getAllGroup);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/{limitNumber}
 router.get("/group/:limit", group.getLimitGroup);
 
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterSj/{subjectId}
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{subjectId}
 router.get("/group/filterId/:id", group.getOnceGroup);
 
-//# POST => 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{groupId}/student
+router.get("/group/filterId/:id/student", group.getAllStudentGroup);
 
-//? PUT => 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{groupId}/student/{studentId}
+router.get("/group/filterId/:id/student/:student", group.getOnceStudentGroup);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{groupId}/student
+router.get("/group/filterId/:id/teacher", group.getAllTeacherGroup);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{groupId}/student/{studentId}
+router.get("/group/filterId/:id/teacher/:teacher", group.getOnceTeacherGroup);
+
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group 
+router.post("/group" , group.addOnceGroup);
+
 
 //---------------------------------------------------------------------//
 //~ Work Collection
