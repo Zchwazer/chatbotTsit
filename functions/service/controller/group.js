@@ -193,15 +193,25 @@ function addOnceGroup(req, res) {
     let getOnce = groupRef.get()
         .then(doc => {
             if (!doc.exists) {
-                let groupRef = db.collection('groups').doc(uuid);
+                //~ Check section is open or not
+                let secRef = db.collection('secs').doc(req.body.Sec).get()
+                    .then(doc => {
+                        if (!doc.exists) {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, this section doesn't exist."
+                            })
+                        } else {
+                            let groupRef = db.collection('groups').doc(uuid);
 
-                let setAda = groupRef.set({
-                    Id: uuid,
-                    Sec: req.body.Sec
-                });
+                            let setAda = groupRef.set({
+                                Id: uuid,
+                                Sec: req.body.Sec
+                            });
+                        }
+                    })
 
-                //~ Check teacher is cpe teacher ?
-
+                //~ Check Teacher each section
                 //~ 1st Teacher of group must have !!! 
                 if (req.body.Teacher1 == "") {
                     return res.status(404).json({
@@ -238,7 +248,7 @@ function addOnceGroup(req, res) {
                 }
 
                 //~ If Have 2nd Teacher
-                if(req.body.Teacher2 != ""){
+                if (req.body.Teacher2 != "") {
                     let teachRef = db.collection('teachers').doc(req.body.Teacher2);
                     let teachOnce = teachRef.get()
                         .then(docTeach => {
@@ -268,7 +278,7 @@ function addOnceGroup(req, res) {
                 }
 
                 //~ If Have 3rd Teacher -> 3rd can be add if 2nd have teacher
-                if(req.body.Teacher2 != "" && req.body.Teacher3 != ""){
+                if (req.body.Teacher2 != "" && req.body.Teacher3 != "") {
                     let teachRef = db.collection('teachers').doc(req.body.Teacher3);
                     let teachOnce = teachRef.get()
                         .then(docTeach => {
@@ -298,10 +308,10 @@ function addOnceGroup(req, res) {
                 }
 
                 return res.status(201)
-                .json({
-                    status: 201,
-                    data: "Add news into collection complete"
-                })
+                    .json({
+                        status: 201,
+                        data: "Add news into collection complete"
+                    })
 
             } else {
                 return res.status(404).json({
@@ -317,9 +327,88 @@ function addOnceGroup(req, res) {
             })
         });
 }
+
+//? Add Student in Group
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/student
+//* Add .json data to 'secs' collection in cloud firestore
+//* .json body Example {
+//*    "Id": "8946dc47-2fed-430d-b7a5-bafcc313dbc8",
+//*    "Student":"115910400343-2"
+//* }
+//~ use in web app for administrator on web app
+function addStudentGroup(req, res) {
+    //~ Check group is found ?
+    let groupRef = db.collection('groups').doc(req.body.Id).get()
+        .then(groupDoc => {
+            if (!groupDoc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, group not found"
+                })
+            } else {
+                //~ Check student is found ?
+                let studentRef = db.collection('groups').doc(req.body.Id)
+                    .collection('students').doc(req.body.Student).get()
+                    .then(groupStudentDoc => {
+                        if (groupStudentDoc.exists) {
+                            return res.status(404).json({
+                                status: 404,
+                                data: "Error, you already register"
+                            })
+                        } else {
+                            //~ Check student can enter this group ?
+                            let studentSecRef = db.collection('secs').doc(groupDoc.data().Sec)
+                                .collection('students').doc(req.body.Student).get()
+                                .then(secStudentDoc => {
+                                    if (!secStudentDoc.exists) {
+                                        return res.status(404).json({
+                                            status: 404,
+                                            data: "Error, you don't have permission to register this group"
+                                        })
+                                    } else {
+                                        let addStuRef = db.collection('groups').doc(groupDoc.data().Id)
+                                            .collection('students').doc(req.body.Student)
+                                            .set({
+                                                Id: req.body.Student,
+                                                NameTH: secStudentDoc.data().NameTH,
+                                                NameEN: secStudentDoc.data().NameEN
+                                            })
+
+                                    }
+                                    //~ Add Student in group complete
+                                    return res.status(201).json({
+                                        status: 201,
+                                        data: "Enter this group complete"
+                                    })
+
+                                })
+                                .catch(err => {
+                                    return res.status(404).json({
+                                        status: 404,
+                                        data: "Error, sec id in group collection not found"
+                                    })
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        return res.status(404).json({
+                            status: 404,
+                            data: "Error, some student data not found"
+                        })
+                    });
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            })
+        });
+}
 //---------------------------------------------------------------------//
 //! WARNING
-
+//? 
+//? 
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
@@ -330,5 +419,6 @@ module.exports = {
     getOnceStudentGroup,
     getAllTeacherGroup,
     getOnceTeacherGroup,
-    addOnceGroup
+    addOnceGroup,
+    addStudentGroup
 }

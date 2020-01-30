@@ -171,10 +171,24 @@ router.get("/group/filterId/:id/teacher/:teacher", group.getOnceTeacherGroup);
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group 
 router.post("/group" , group.addOnceGroup);
 
-
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/student
+router.post("/group/student" , group.addStudentGroup);
 //---------------------------------------------------------------------//
 //~ Work Collection
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work 
+router.get("/work" , work.getAllWork);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/{limitNumber}
+router.get("/work/:limit", work.getLimitWork);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/filterId/{workId}
+router.get("/work/filterId/:id" , work.getOnceWork);
+
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/work  
+router.post("/work", work.addOnceWork);
+
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/updateData/{workId}
+router.put("/work/updateData/:id" , work.updateOnceWork);
 
 //---------------------------------------------------------------------//
 module.exports = router;

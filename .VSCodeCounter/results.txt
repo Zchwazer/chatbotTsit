@@ -1,0 +1,48 @@
+Date : 2020-01-27 16:15:19
+Directory : c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions
+Total : 18 files,  3653 codes, 465 comments, 176 blanks, all 4294 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          3 |      2,243 |          0 |          3 |      2,246 |
+| JavaScript |         15 |      1,410 |        465 |        173 |      2,048 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                            | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                               |         18 |      3,653 |        465 |        176 |      4,294 |
+| asset                                                                                           |          1 |         12 |          0 |          1 |         13 |
+| service                                                                                         |          9 |      1,306 |        429 |        142 |      1,877 |
+| service\controller                                                                              |          8 |      1,250 |        356 |         91 |      1,697 |
+| src                                                                                             |          2 |         32 |         15 |          7 |         54 |
+| test                                                                                            |          1 |         28 |          4 |          9 |         41 |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                        | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\asset\serviceAccountKey.json  | JSON       |         12 |          0 |          1 |         13 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\data.js                       | JavaScript |         17 |          3 |          6 |         26 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\import.js                     | JavaScript |         15 |          8 |          7 |         30 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\index.js                      | JavaScript |         12 |          6 |          2 |         20 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\package-lock.json             | JSON       |      2,203 |          0 |          1 |      2,204 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\package.json                  | JSON       |         28 |          0 |          1 |         29 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\group.js   | JavaScript |        251 |         62 |         21 |        334 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\news.js    | JavaScript |        167 |         52 |         10 |        229 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\sec.js     | JavaScript |        180 |         62 |         13 |        255 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\student.js | JavaScript |         42 |         20 |          2 |         64 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\subject.js | JavaScript |        346 |         88 |         28 |        462 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\teacher.js | JavaScript |         38 |         19 |          2 |         59 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\user.js    | JavaScript |        226 |         53 |         14 |        293 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\controller\work.js    | JavaScript |          0 |          0 |          1 |          1 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\service\route.js              | JavaScript |         56 |         73 |         51 |        180 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\src\config.js                 | JavaScript |          9 |          2 |          0 |         11 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\src\server.js                 | JavaScript |         23 |         13 |          7 |         43 |
+| c:\Users\Zchwarzlanky\Documents\Programming\chatbotTsit\functions\test\test.js                  | JavaScript |         28 |          4 |          9 |         41 |
+| Total                                                                                           |            |      3,653 |        465 |        176 |      4,294 |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
