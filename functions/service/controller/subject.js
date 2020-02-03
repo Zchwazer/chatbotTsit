@@ -160,7 +160,7 @@ function getFilterStatusSubject(req, res) {
 }
 
 //? Get All subjects (Filter status & Limit)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterAv/{status}/{limitNumber}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterSt/{status}/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
 function getLimitFilterStatusSubject(req, res) {
@@ -216,16 +216,8 @@ function getOnceSubject(req, res) {
 //*     "Status": 0
 //* }
 function addOnceSubject(req, res) {
-    //~ Get Data from Body
-    var id = req.body.Id
-    var thName = req.body.NameTH
-    var enName = req.body.NameEN
-    var credit = req.body.Credit
-    var type = req.body.Type
-    var stat = req.body.Status
-
     //~ Check subject already add ?
-    let subjectRef = db.collection('subjects').doc(id);
+    let subjectRef = db.collection('subjects').doc(req.body.Id);
     let checkSubject = subjectRef.get()
         .then(doc => {
             if (doc.exists) {
@@ -235,15 +227,15 @@ function addOnceSubject(req, res) {
                 })
             } else {
                 //~ Add data to users collection
-                let docRef = db.collection('subjects').doc(id);
+                let docRef = db.collection('subjects').doc(req.body.Id);
 
                 let setAda = docRef.set({
-                    Id: id,
-                    NameTH: thName,
-                    NameEN: enName,
-                    Credit: credit,
-                    Type: type,
-                    Status: stat
+                    Id: req.body.Id,
+                    NameTH: req.body.NameTH,
+                    NameEN: req.body.NameEN,
+                    Credit: req.body.Credit,
+                    Type: req.body.Type,
+                    Status: req.body.Status
                 });
 
                 return res.status(201)

@@ -105,7 +105,7 @@ function getOnceSection(req, res) {
         });
 }
 
-//? Add news
+//? Add sec
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/secs/
 //* Add .json data to 'secs' collection in cloud firestore
 //* .json body Example {

@@ -59,6 +59,90 @@ function getLimitGroup(req, res) {
         });
 }
 
+
+//? Get All group (filterStudent)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterStudentId/{studentId}
+//* List all group in 'group' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getAllGroupOfStudent(req, res) {
+    useAsyncAwait(req.params.id)
+    async function useAsyncAwait(userId) {
+        try {
+            let groupSnapshot = await getGroupSnapshot()
+            let studentSnapshot = await getStudentSnapshot(groupSnapshot, userId)
+            let secSnapshot = await getSecSnapshot(studentSnapshot)
+            let subjectSnapshot = await getSubjectSnapshot(secSnapshot)
+            fetchAllData(subjectSnapshot)
+        } catch (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        }
+    }
+
+    async function getGroupSnapshot() {
+        var groupAllData = []
+        var groupSnapshot = db.collection('groups').get()
+        for (const groupDoc of (await groupSnapshot).docs) {
+            groupAllData.push(groupDoc.data())
+        }
+        return groupAllData
+    }
+
+    async function getStudentSnapshot(groupSnapshot = [], userId) {
+        var studentAllData = []
+        for (var index = 0; index < groupSnapshot.length; index++) {
+            const studentSnapshot = await checkStudent(groupSnapshot[index].Id, userId)
+            if (studentSnapshot.exists) {
+                studentAllData.push(groupSnapshot[index])
+            }
+        }
+        return studentAllData
+    }
+
+    async function checkStudent(groupId, userId) {
+        var studentDoc = db.collection('groups').doc(groupId)
+            .collection('students').doc(userId).get();
+        return studentDoc
+    }
+
+    async function getSecSnapshot(studentSnapshot = []) {
+        var secAllData = []
+        for (var index = 0; index < studentSnapshot.length; index++) {
+            const secValue = await db.collection('secs').doc(studentSnapshot[index].Sec).get();
+            if (secValue.exists) {
+                studentSnapshot[index].Sec = secValue.data()
+                secAllData.push(studentSnapshot[index])
+            }
+        }
+        return secAllData
+    }
+
+    async function getSubjectSnapshot(secSnapshot = []) {
+        var subjectAllData = []
+        for (var index = 0; index < secSnapshot.length; index++) {
+            const subjectValue = await db.collection('subjects').doc(secSnapshot[index].Sec.Subject).get();
+            if (subjectValue.exists) {
+                secSnapshot[index].Sec.Subject = subjectValue.data().NameTH
+                subjectAllData.push(secSnapshot[index])
+            }
+        }
+        return subjectAllData
+    }
+
+    function fetchAllData(fetchData = []) {
+        if (fetchData.length != 0) {
+            return res.send(fetchData)
+        } else {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, group not found"
+            })
+        }
+    }
+}
+
 //? Get Once group
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}
 //* Detail of once document of 'groups' collection (find by id)
@@ -181,7 +265,9 @@ function getOnceTeacherGroup(req, res) {
 //* Add .json data to 'secs' collection in cloud firestore
 //* .json body Example {
 //*     "Sec": "0a9a8b49-4568-4cb5-a963-0643162e5f76",
-//*     "Teacher": "33eb18d0-7744-4bff-b8ea-49a89b2bd02a"
+//*     "Teacher1": "33eb18d0-7744-4bff-b8ea-49a89b2bd02a",
+//*     "Teacher2": "",
+//*     "Teacher3": ""
 //* }
 //~ use in web app for administrator on web app
 function addOnceGroup(req, res) {
@@ -416,6 +502,7 @@ module.exports = {
     getLimitGroup,
     getOnceGroup,
     getAllStudentGroup,
+    getAllGroupOfStudent,
     getOnceStudentGroup,
     getAllTeacherGroup,
     getOnceTeacherGroup,

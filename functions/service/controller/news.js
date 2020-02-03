@@ -62,7 +62,7 @@ function getOnceNews(req, res) {
         });
 }
 
-//? Get Group news
+//? Get Type news
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filterTp/{newsType}
 //* Detail of all document of 'news' collection with filter by type 
 //~ use in mobile app to look once of news 
