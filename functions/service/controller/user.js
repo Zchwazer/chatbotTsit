@@ -115,8 +115,9 @@ function getOnceEmail(req, res) {
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
+    var id = req.body.Id
     //~ Check user already register ?
-    let userRef = db.collection('users').doc(req.body.Id);
+    let userRef = db.collection('users').doc(id);
     let checkUser = userRef.get()
         .then(doc => {
             if (doc.exists) {
@@ -128,21 +129,21 @@ function addOnceUser(req, res) {
                 //~ Check student id is CPE student ?
                 let stuRef = db.collection('students').doc(id);
                 let checkOnce = stuRef.get()
-                    .then(doc => {
-                        if (!doc.exists) {
+                    .then(studentDoc => {
+                        if (!studentDoc.exists) {
                             return res.status(404).json({
                                 status: 404,
                                 data: "Error, this id is not computer engineering student"
                             })
                         } else {
                             //~ Get first name & last name
-                            var thName = doc.data().NameTH
-                            var enName = doc.data().NameEN
-                            var major = doc.data().Major
-                            var fac = doc.data().Faculty
-                            var stat = doc.data().Status
-                            var deg = doc.data().Degree
-                            var studentId = doc.data().Id
+                            var thName = studentDoc.data().NameTH
+                            var enName = studentDoc.data().NameEN
+                            var major = studentDoc.data().Major
+                            var fac = studentDoc.data().Faculty
+                            var stat = studentDoc.data().Status
+                            var deg = studentDoc.data().Degree
+                            var studentId = studentDoc.data().Id
 
                             //~ Add data to users collection
                             let docRef = db.collection('users').doc(studentId);
@@ -178,7 +179,7 @@ function addOnceUser(req, res) {
         .catch(err => {
             return res.status(404).json({
                 status: 404,
-                data: "Error, some input was missing"
+                data: "Error, Endpoint not Found"
             })
         });
 }

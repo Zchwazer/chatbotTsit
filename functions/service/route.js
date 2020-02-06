@@ -102,21 +102,8 @@ router.get("/subject/filterId/:id", subject.getOnceSubject);
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
 router.post("/subject" ,subject.addOnceSubject);
 
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateTh/{subjectId}
-router.put("/subject/updateTh/:id", subject.updateNameThSubject);
-
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateEn/{subjectId}
-router.put("/subject/updateEn/:id", subject.updateNameEnSubject);
-
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateCr/{subjectId}
-router.put("/subject/updateCr/:id", subject.updateCreditSubject);
-
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateTp/{subjectId}
-router.put("/subject/updateTp/:id", subject.updateTypeSubject);
-
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateSt/{subjectId}
-router.put("/subject/updateSt/:id", subject.updateStatusSubject);
-
+router.put("/subject/updateSj/:id",subject.updateSubject);
 //---------------------------------------------------------------------//
 //~ Teacher Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/teacher

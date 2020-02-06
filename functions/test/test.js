@@ -11,90 +11,71 @@ let db = admin.firestore();
 //---------------------------------------------------------------------//
 //# Test Section
 
-//* Variable
-var workId = "0db30ea7-e90e-4ed8-bb82-bfdd48d482ce"
-var updateDate = ["1", "2", "3"];
-var newDate = ["4", "5", "6"];
-var newTopic = ""
-var newDes = ""
-// main()
-updateMain()
+//~ Check user already register ?
+let userRef = db.collection('users').doc('0000000000000');
+let checkUser = userRef.get()
+    .then(doc => {
+        if (doc.exists) {
+            console.log('found user already register')        
+        }
+        else{
+            let stuRef = db.collection('students').doc('0000000000000');
+            let checkOnce = stuRef.get()
+                .then(studentDoc => {
+                    if (!studentDoc.exists) {
+                        console.log('not student')
+                    } else {
+                        //~ Get first name & last name
+                        var thName = studentDoc.data().NameTH
+                        var enName = studentDoc.data().NameEN
+                        var major = studentDoc.data().Major
+                        var fac = studentDoc.data().Faculty
+                        var stat = studentDoc.data().Status
+                        var deg = studentDoc.data().Degree
+                        var studentId = studentDoc.data().Id
 
-
-//* Function
-// async function main() {    
-//     let workRef = await db.collection('works').doc(workId).get();
-//     if (workRef.exists) {
-//         const topicCounter = updateTopicOrNot()
-//         const descriptionCounter = updateDescriptionOrNot()
-//         const dateCounter = updateDateOrNot()
-//         updateDateData(topicCounter,descriptionCounter)
-//     }
-//     else{
-//         console.log("work not found")
-//     }
-// }
-
-// function updateTopicOrNot() {
-//     var topicCounter = false 
-//     if (newTopic != "") {
-//         let topicUpdate = db.collection('works').doc(workId).get()
-//         .update({
-//             Topic: newTopic
-//         })
-//         topicCounter = true    
-//     } 
-//     return topicCounter
-// }
-
-// function updateDescriptionOrNot() {
-//     var descriptionCounter = false
-//     if (newDes != "") {
-//         let descriptionUpdate = db.collection('works').doc(workId).get()
-//         .update({
-//             Description: newDes
-//         })        
-//         descriptionCounter = true
-//     } 
-//     return descriptionCounter
-// }
-
-// function updateDescriptionOrNot() {
-//     var datecounter = false
-//     if (newTopic != "") {
-//         let descriptionUpdate = db.collection('works').doc(workId).get()
-//         .update({
-//             SendDate: newDate
-//         })        
-//         datecounter = true
-//     } 
-//     return descriptionCounter
-// }
-
-// function updateDateData(topicCounter,descriptionCounter,dateCounter) {
-//     if (topicCounter === true || descriptionCounter === true || dateCounter === true){
-//         let workUpdate = db.collection('works').doc(workId).get()
-//         .update({
+                        console.log(studentDoc.data())
+                    }});
+                
+        }});
             
-//             UpdateDate: updateDate
-//         })        
-//     }
-// }
+    //     } else {
+    //         //~ Check student id is CPE student ?
+    //         
+    //                     //~ Add data to users collection
+    //                     let docRef = db.collection('users').doc(studentId);
 
+    //                     let setAda = docRef.set({
+    //                         Id: studentId,
+    //                         NameTH: thName,
+    //                         NameEN: enName,
+    //                         Email: req.body.Email,
+    //                         Password: req.body.Password,
+    //                         Major:major,
+    //                         Faculty:fac,
+    //                         Status:stat,
+    //                         Degree:deg,                                
+    //                         Level: 0
+    //                     });
 
-async function updateMain() {
-    var s=1
-    let workRef = await db.collection('works').doc(workId).get();
-    // s == 0 ? console.log("a"): console.log("b")
-    workRef.exists ? updateData() : console.log("Not Found Work")
-}
-
-function updateData(workRef){
-    let workUpdate = db.collection('works').doc(workId)
-        .update({
-            Topic : newTopic,
-            Description : newDes,
-            SendDay : newDate,
-            UpdateDate : updateDate
-        })
-}
+    //                     return res.status(201)
+    //                         .json({
+    //                             status: 201,
+    //                             data: "Add data into collection complete"
+    //                         })
+    //                 }
+    //             })
+    //             .catch(err => {
+    //                 return res.status(404).json({
+    //                     status: 404,
+    //                     data: "Error, some input was missing"
+    //                 })
+    //             });
+    //     }
+    // })
+    // .catch(err => {
+    //     return res.status(404).json({
+    //         status: 404,
+    //         data: "Error, some input was missing"
+    //     })
+    // });
