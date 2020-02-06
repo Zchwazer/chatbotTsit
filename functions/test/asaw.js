@@ -16,7 +16,7 @@ var id = "115910400343-2"
 // testNo4()
 // testNo5(id)
 // testNo6(id)
-testNo7(id)
+perfectValue(id)
 
 
 // //! F1
@@ -220,12 +220,13 @@ testNo7(id)
 // }
 
 //! F7
-async function testNo7(userId) {
+async function perfectValue(userId) {
     let groupSnapshot = await getGroupSnapshot()
-    let studentSnapshot = await getStudentSnapshot(groupSnapshot, userId)        
-    let secSnapshot = await getSecSnapshot(studentSnapshot)    
+    let studentSnapshot = await getStudentSnapshot(groupSnapshot, userId)
+    let secSnapshot = await getSecSnapshot(studentSnapshot)
     let subjectSnapshot = await getSubjectSnapshot(secSnapshot)
-    console.log(subjectSnapshot)
+    let teacherSnapshot = await getTeacherSnapshot(subjectSnapshot)
+    console.log(teacherSnapshot)
 }
 
 async function getGroupSnapshot() {
@@ -254,26 +255,48 @@ async function checkStudent(groupId, userId) {
     return studentDoc
 }
 
-async function getSecSnapshot(studentSnapshot = []){
+async function getSecSnapshot(studentSnapshot = []) {
     var secAllData = []
-    for (var index = 0 ; index < studentSnapshot.length ; index++){
+    for (var index = 0; index < studentSnapshot.length; index++) {
         const secValue = await db.collection('secs').doc(studentSnapshot[index].Sec).get();
-        if (secValue.exists){
+        if (secValue.exists) {
             studentSnapshot[index].Sec = secValue.data()
-            secAllData.push(studentSnapshot[index])            
+            secAllData.push(studentSnapshot[index])
         }
     }
     return secAllData
 }
 
-async function getSubjectSnapshot(secSnapshot = []){
+async function getSubjectSnapshot(secSnapshot = []) {
     var subjectAllData = []
-    for (var index = 0 ; index < secSnapshot.length ; index++){
+    for (var index = 0; index < secSnapshot.length; index++) {
         const subjectValue = await db.collection('subjects').doc(secSnapshot[index].Sec.Subject).get();
-        if (subjectValue.exists){
+        if (subjectValue.exists) {
             secSnapshot[index].Sec.Subject = subjectValue.data().NameTH
             subjectAllData.push(secSnapshot[index])
-        }        
+        }
     }
     return subjectAllData
+}
+
+async function getTeacherSnapshot(subjectSnapshot = []) {
+    var teacherAllData = []
+    for (var index = 0; index < subjectSnapshot.length; index++) {
+        const teacherValue = await checkTeacher(subjectSnapshot[index].Id)
+        console.log(teacherValue)
+        subjectSnapshot[index].Teacher1 = teacherValue[0]
+        subjectSnapshot[index].Teacher2 = teacherValue[1]
+        subjectSnapshot[index].Teacher3 = teacherValue[2]
+        teacherAllData.push(subjectSnapshot[index])
+    }
+    return teacherAllData
+}
+
+async function checkTeacher(groupId) {
+    var teacherAllData = []
+    var teacherSnapshot = db.collection('groups').doc(groupId).collection('teachers').get()
+    for (const teacherDoc of (await teacherSnapshot).docs) {
+        teacherAllData.push(teacherDoc.data().NameTH)
+    }    
+    return teacherAllData
 }

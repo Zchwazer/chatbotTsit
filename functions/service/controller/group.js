@@ -64,19 +64,30 @@ function getLimitGroup(req, res) {
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterStudentId/{studentId}
 //* List all group in 'group' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getAllGroupOfStudent(req, res) {
-    useAsyncAwait(req.params.id)
-    async function useAsyncAwait(userId) {
+function getAllGroupOfStudent(req, res) {    
+    useAsyncAwait()
+    async function useAsyncAwait() {
         try {
+            //~ 1st Get All Group Data [just like GET ALL]
             let groupSnapshot = await getGroupSnapshot()
-            let studentSnapshot = await getStudentSnapshot(groupSnapshot, userId)
+
+            //~ 2nd Check in all group is have user in sub collection 
+            let studentSnapshot = await getStudentSnapshot(groupSnapshot, req.params.id)
+
+            //~ 3rd While get data from 2nd then change data from Sec.Id to Sec.data()
             let secSnapshot = await getSecSnapshot(studentSnapshot)
+
+            //~ 4th Then subject in Sec.data() is code then change that into NameTH
             let subjectSnapshot = await getSubjectSnapshot(secSnapshot)
-            fetchAllData(subjectSnapshot)
+
+            // //~ 5th Get all teacher to display on UI
+            let teacherSnapshot = await getTeacherSnapshot(subjectSnapshot)
+
+            fetchAllData(teacherSnapshot)
         } catch (err) {
             return res.status(404).json({
                 status: 404,
-                data: "Error, endpoint not found"
+                data: "Error, Endpoint not found"
             })
         }
     }
@@ -90,10 +101,10 @@ function getAllGroupOfStudent(req, res) {
         return groupAllData
     }
 
-    async function getStudentSnapshot(groupSnapshot = [], userId) {
+    async function getStudentSnapshot(groupSnapshot = []) {
         var studentAllData = []
         for (var index = 0; index < groupSnapshot.length; index++) {
-            const studentSnapshot = await checkStudent(groupSnapshot[index].Id, userId)
+            const studentSnapshot = await checkStudent(groupSnapshot[index].Id)
             if (studentSnapshot.exists) {
                 studentAllData.push(groupSnapshot[index])
             }
@@ -101,9 +112,9 @@ function getAllGroupOfStudent(req, res) {
         return studentAllData
     }
 
-    async function checkStudent(groupId, userId) {
+    async function checkStudent(groupId) {
         var studentDoc = db.collection('groups').doc(groupId)
-            .collection('students').doc(userId).get();
+            .collection('students').doc(req.params.id).get();
         return studentDoc
     }
 
@@ -129,6 +140,28 @@ function getAllGroupOfStudent(req, res) {
             }
         }
         return subjectAllData
+    }
+
+    async function getTeacherSnapshot(subjectSnapshot = []) {
+        var teacherAllData = []
+        for (var index = 0; index < subjectSnapshot.length; index++) {
+            const teacherValue = await checkTeacher(subjectSnapshot[index].Id)            
+            // subjectSnapshot[index].Teacher1 = teacherValue[0]
+            // subjectSnapshot[index].Teacher2 = teacherValue[1]
+            // subjectSnapshot[index].Teacher3 = teacherValue[2]
+            subjectSnapshot[index].Teacher = teacherValue
+            teacherAllData.push(subjectSnapshot[index])
+        }
+        return teacherAllData
+    }
+    
+    async function checkTeacher(groupId) {
+        var teacherAllData = []
+        var teacherSnapshot = db.collection('groups').doc(groupId).collection('teachers').get()
+        for (const teacherDoc of (await teacherSnapshot).docs) {
+            teacherAllData.push(teacherDoc.data().NameTH)
+        }    
+        return teacherAllData
     }
 
     function fetchAllData(fetchData = []) {

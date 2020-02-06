@@ -145,37 +145,46 @@ function addOnceWork(req, res) {
 //* List once user in 'works' collection 
 //~ use for user to look once of work in mobile app
 function updateOnceWork(req, res) {
+    //~ Initialize Date
+    var updateDate = [req.body.Day, getMonth(req.body.Month), req.body.Year];
+    var newDate = [req.body.NewDay, getMonth(req.body.NewMonth), req.body.NewYear]
 
-    function getWorkData() {
-        //~ Initialize Date
-        var updateDate = [req.body.Day, getMonth(req.body.Month), req.body.Year];
-        var newDate = [req.body.NewDay, getMonth(req.body.NewMonth), req.body.NewYear]
+    updateMain()
+    
+    async function updateMain() {
+        try{
+            let workRef = await db.collection('works').doc(req.body.Id).get();
+            if (workRef.exists){
+                updateData(workRef)
+            }
+            else{
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error , Work not found"
+                })
+            }
+        }        
+        catch(err){
+            return res.status(404).json({
+                status: 404,
+                data: "Error , Endpoint not found"
+            })
+        }
+    }
 
-        // let workRef = db.collection('works').doc(req.params.id).get()
-        //     .then(doc => {
-        //         if (!doc.exists) {
-        //             return res.status(404).json({
-        //                 status: 404,
-        //                 data: "Error, work not found"
-        //             })
-        //         } else {
-        //             let workUpdate = db.collection('works').doc(req.params.id).get()
-        //             .update({
-        //                 Topic : req.body.Topic,
-        //                 Description : req.body.Description,
-        //                 SendDate : newDate,
-        //                 UpdateDate : updateDate
-        //             })                
-        //         }
-        //     })
-        //     .catch(err => {
-        //         return res.status(404).json({
-        //             status: 404,
-        //             data: "Error, some input was found"
-        //         })
-        //     });
+    function updateData(workRef) {
+        let workUpdate = db.collection('works').doc(req.body.Id)
+            .update({
+                Topic: newTopic,
+                Description: newDes,
+                SendDay: newDate,
+                UpdateDate: updateDate
+            })
 
-        let workRef = await
+        return res.status(201).json({
+            status: 201,
+            data: "Your data update success"
+        })
     }
 }
 

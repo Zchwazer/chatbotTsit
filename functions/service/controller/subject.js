@@ -256,10 +256,10 @@ function addOnceSubject(req, res) {
 //? Update subject Name (Thai)
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateTh/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateNameThSubject(req, res) {    
+function updateNameThSubject(req, res) {
     var id = req.params.id
-    var thName = req.body.NameTH    
-    
+    var thName = req.body.NameTH
+
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
         .then(doc => {
@@ -290,10 +290,10 @@ function updateNameThSubject(req, res) {
 //? Update subject Name (English)
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateEn/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateNameEnSubject(req, res) {    
+function updateNameEnSubject(req, res) {
     var id = req.params.id
-    var enName = req.body.NameEN    
-    
+    var enName = req.body.NameEN
+
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
         .then(doc => {
@@ -324,11 +324,11 @@ function updateNameEnSubject(req, res) {
 //? Update subject Credit
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateCr/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateCreditSubject(req, res) {   
+function updateCreditSubject(req, res) {
     //~ Credit is integer 
     var id = req.params.id
-    var credit = req.body.Credit    
-    
+    var credit = req.body.Credit
+
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
         .then(doc => {
@@ -359,11 +359,11 @@ function updateCreditSubject(req, res) {
 //? Update subject Type
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateTp/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateTypeSubject(req, res) {    
+function updateTypeSubject(req, res) {
     //~ Type is integer 
     var id = req.params.id
-    var type = req.body.Type    
-    
+    var type = req.body.Type
+
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
         .then(doc => {
@@ -394,11 +394,11 @@ function updateTypeSubject(req, res) {
 //? Update subject Status
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateSt/{subjectId}
 //~ use in web app for administrator to change data in subjects collection
-function updateStatusSubject(req, res) {    
+function updateStatusSubject(req, res) {
     //~ Status is integer 
     var id = req.params.id
-    var stat = req.body.Status    
-    
+    var stat = req.body.Status
+
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
         .then(doc => {
@@ -425,6 +425,48 @@ function updateStatusSubject(req, res) {
             })
         });
 }
+async function updateSubject(req, res) {
+    //~ Initialize Date
+    var updateDate = [req.body.Day, getMonth(req.body.Month), req.body.Year];
+    var newDate = [req.body.NewDay, getMonth(req.body.NewMonth), req.body.NewYear]
+
+    var subjectRef = await getSubjectRef()
+
+    if (subjectRef.exists) {
+        updateData(subjectRef)
+    } else {
+        return res.status(404).json({
+            status: 404,
+            data: "Error , Work not found"
+        })
+    }
+    async function getSubjectRef() {
+        try {
+            let subjectRef = await db.collection('subjects').doc(req.body.Id).get();
+            return subjectRef
+        } catch (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error , Endpoint not found"
+            })
+        }
+    }
+
+    function updateData(workRef) {
+        let workUpdate = db.collection('subjects').doc(req.body.Id)
+            .update({
+                Topic: newTopic,
+                Description: newDes,
+                SendDay: newDate,
+                UpdateDate: updateDate
+            })
+
+        return res.status(201).json({
+            status: 201,
+            data: "Your data update success"
+        })
+    }
+}
 //---------------------------------------------------------------------//
 //! WARNING TYPE
 //? Subject type 0 = Compulsory subject
@@ -446,9 +488,5 @@ module.exports = {
     getLimitFilterStatusSubject,
     getOnceSubject,
     addOnceSubject,
-    updateNameThSubject,
-    updateNameEnSubject,
-    updateCreditSubject,
-    updateTypeSubject,
-    updateStatusSubject
+    updateSubject
 }
