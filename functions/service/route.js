@@ -18,6 +18,7 @@ const sec = require('./controller/sec');
 const teacher = require('./controller/teacher');
 const group = require('./controller/group');
 const work = require('./controller/work');
+const admin = require('./controller/admin');
 
 //---------------------------------------------------------------------//
 //~ User Collection
@@ -182,6 +183,29 @@ router.post("/work", work.addOnceWork);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/updateData/{workId}
 router.put("/work/updateData/:id" , work.updateOnceWork);
+
+//---------------------------------------------------------------------//
+//~ Administrator Collection
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin
+router.get("/admin" ,admin.getAllAdmin);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/{limitNumber}
+router.get("/admin/:limit" ,admin.getLimitAdmin);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/filterId/{adminId}
+router.get("/admin/filterId/:id" ,admin.getOnceAdmin);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/filterEm/{adminEmail}
+router.get("/admin/filterEm/:email", admin.getOnceAdminEmail)
+
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin
+router.post("/admin" ,admin.addOnceAdmin);
+
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/updatePs/{adminId}
+router.put("/admin/updatePs/:id", admin.updateAdminPassword);
+
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/updateEm/{adminId}
+router.put("/admin/updateEm/:id", admin.updateAdminPassword);
 
 //---------------------------------------------------------------------//
 module.exports = router;
