@@ -1,85 +1,89 @@
 //-- About comment color definition
 //! Red     : Main Topic each section
 //? Blue    : Sub Topic each section
-//# Yellow  : Example endpoint 
+//# Yellow  : Example endpoint
 //* Green   : Work of this section
 //~ Pink    : Explain function
 //---------------------------------------------------------------------//
 //! Initialize Cloud Firestore
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //! Initialize UUID
 //~ uuid/V4 = random uuid
-const uuidV4 = require('uuid/v4');
+const uuidV4 = require("uuid/v4");
 
 //---------------------------------------------------------------------//
 //! User Collection Section
 //? Get All news
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news
-//* List all user in 'news' collection 
-//~ use in mobile app to look all of news 
+//* List all user in 'news' collection
+//~ use in mobile app to look all of news
 function getAllNews(req, res) {
     var newsAllData = [];
-    db.collection('news').get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
+    db.collection("news")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
                 newsAllData.push(doc.data());
             });
             return res.send(newsAllData);
         })
-        .catch((err) => {
+        .catch(err => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, endpoint not found"
-            })
+            });
         });
 }
 
 //? Get Once news
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/{newsId}
 //* Detail of once document of 'news' collection (find by id)
-//~ use in mobile app to look once of news 
+//~ use in mobile app to look once of news
 function getOnceNews(req, res) {
-    let newsRef = db.collection('news').doc(req.params.id)
-    let getOnce = newsRef.get()
+    let newsRef = db.collection("news").doc(req.params.id);
+    let getOnce = newsRef
+        .get()
         .then(doc => {
             if (!doc.exists) {
                 return res.status(404).json({
                     status: 404,
                     data: "Error, News not found"
-                })
+                });
             } else {
-                return res.send(doc.data())
+                return res.send(doc.data());
             }
         })
         .catch(err => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, endpoint not found"
-            })
+            });
         });
 }
 
 //? Get Type news
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filterTp/{newsType}
-//* Detail of all document of 'news' collection with filter by type 
-//~ use in mobile app to look once of news 
+//* Detail of all document of 'news' collection with filter by type
+//~ use in mobile app to look once of news
 function getFilterTypeNews(req, res) {
     var newsAllFilter = [];
-    db.collection('news').where("Type", "==", req.params.type).get()
-        .then((snapshot) => {
-            snapshot.forEach((doc) => {
+    db.collection("news")
+        .where("Type", "==", req.params.type)
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
                 newsAllFilter.push(doc.data());
             });
             return res.send(newsAllFilter);
         })
-        .catch((err) => {
+        .catch(err => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, News type not found"
-            })
+            });
         });
 }
 
@@ -87,42 +91,46 @@ function getFilterTypeNews(req, res) {
 //# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/
 //* Add .json data to 'news' collection in cloud firestore
 //* .json body Example {
-//*     "Topic" : "Hello World" 	
+//*     "Topic" : "Hello World"
 //* 	"Description": "How to train your programming",
-//* 	"Day" : "01",
-//*     "Month": "12",
-//*     "Year": "2562",
+//* 	"Date" : "2020-02-07",
+//*     "Time" : "05:00",
 //*     "Type" : "A"
 //* }
 //~ use in web app for administrator on web app
 function addOnceNews(req, res) {
-    //~ Generate UUID 
-    var uuid = uuidV4()
+    //~ Generate UUID
+    var uuid = uuidV4();
+
+    //~ Generate Date
+    var getDate = req.body.Date
+    var day = getDate.substr(8, 9)
+    var month = getMonth(getDate.substr(5, 2))
+    var year = getYear(getDate.substr(0, 4))
 
     //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
-    let newsRef = db.collection('news').doc(uuid)
-    let getOnce = newsRef.get()
+    let newsRef = db.collection("news").doc(uuid);
+    let getOnce = newsRef
+        .get()
         .then(doc => {
             if (!doc.exists) {
-                //~ Define Another Variable            
-                let newsRef = db.collection('news').doc(uuid);
+                //~ Define Another Variable
+                let newsRef = db.collection("news").doc(uuid);
 
                 let setAda = newsRef.set({
                     Id: uuid,
                     Topic: req.body.Topic,
                     Description: req.body.Description,
-                    Day: req.body.Day,
-                    Month: getMonth(req.body.Month),
-                    Year: req.body.Year,
+                    Date: [day,month,year],
+                    Time: req.body.Time,
                     Type: req.body.Type,
                     Status: 1
                 });
 
-                return res.status(201)
-                    .json({
-                        status: 201,
-                        data: "Add news into collection complete"
-                    })
+                return res.status(201).json({
+                    status: 201,
+                    data: "Add news into collection complete"   
+                });
             } else {
                 addOnceNews(req, res);
             }
@@ -131,25 +139,26 @@ function addOnceNews(req, res) {
             return res.status(404).json({
                 status: 404,
                 data: "Error, endpoint not found"
-            })
+            });
         });
 }
 
 //? Update news data
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateDt/{newsId}
 //~ use in web app for administrator to change news description
-function updateNewsData(req, res) {        
-    let newsRef = db.collection('news').doc(req.params.id)
-    let getRef = newsRef.get()
+function updateNewsData(req, res) {
+    let newsRef = db.collection("news").doc(req.params.id);
+    let getRef = newsRef
+        .get()
         .then(doc => {
             if (!doc.exists) {
                 return res.status(404).json({
                     status: 404,
                     data: "Error, user not found"
-                })
+                });
             } else {
                 let setAda = newsRef.update({
-                    Topic : req.body.Topic,
+                    Topic: req.body.Topic,
                     Description: req.body.Description,
                     Day: req.body.Day,
                     Month: req.body.Month,
@@ -160,14 +169,14 @@ function updateNewsData(req, res) {
                 return res.status(201).json({
                     status: 201,
                     data: "User has been update success"
-                })
+                });
             }
         })
         .catch(err => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, some input was missing"
-            })
+            });
         });
 }
 //---------------------------------------------------------------------//
@@ -176,47 +185,55 @@ function updateNewsData(req, res) {
 //? News status 1 = Show
 //---------------------------------------------------------------------//
 //! FUNCTION
-function getMonth(mon){
+//~ Change month from integer to text
+function getMonth(mon) {
     //~ Change Month to text
     switch (mon) {
         case "1":
-            mon = "มกราคม"
+            mon = "มกราคม";
             break;
         case "2":
-            mon = "กุมภาพันธ์"
+            mon = "กุมภาพันธ์";
             break;
         case "3":
-            mon = "มีนาคม"
+            mon = "มีนาคม";
             break;
         case "4":
-            mon = "เมษายน"
+            mon = "เมษายน";
             break;
         case "5":
-            mon = "พฤษภาคม"
+            mon = "พฤษภาคม";
             break;
         case "6":
-            mon = "มิถุนายน"
+            mon = "มิถุนายน";
             break;
         case "7":
-            mon = "กรกฎาคม"
+            mon = "กรกฎาคม";
             break;
         case "8":
-            mon = "สิงหาคม"
+            mon = "สิงหาคม";
             break;
         case "9":
-            mon = "กันยายน"
+            mon = "กันยายน";
             break;
         case "10":
-            mon = "ตุลาคม"
+            mon = "ตุลาคม";
             break;
         case "11":
-            mon = "พฤศจิกายน"
+            mon = "พฤศจิกายน";
             break;
         case "12":
-            mon = "ธันวาคม"
+            mon = "ธันวาคม";
             break;
     }
     return mon;
+}
+
+//~ Change year from A.D. to B.E.
+function getYear(year) {
+    var newYear = parseInt(year) + 543    
+    var fetchYear = newYear.toString()
+    return fetchYear;
 }
 //---------------------------------------------------------------------//
 //! Export function to route
@@ -226,4 +243,4 @@ module.exports = {
     getOnceNews,
     addOnceNews,
     updateNewsData
-}
+};
