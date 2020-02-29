@@ -12,14 +12,7 @@ const dlc = require("../service/dlc");
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //# Test Section
-var date = "2020-12-01"
-var newwer = "2020-03-01"
-
-var updateDate = dlc.getDate(date)
-var setUpdateDate = [updateDate[2], dlc.getMonth(updateDate[1]), dlc.getYear(updateDate[0])]
-
-var newDate = dlc.getDate(newwer)
-var setNewDate = [newDate[2], dlc.getMonth(newDate[1]), dlc.getYear(newDate[0])]
-
-console.log(setUpdateDate)
-console.log(setNewDate)
+var id = "1159104003382"
+var firstId = id.substr(0,12)
+var lastId = id.substr(12) 
+console.log(firstId + "-" + lastId)

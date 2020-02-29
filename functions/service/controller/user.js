@@ -86,13 +86,13 @@ function getOnceUser(req, res) {
 function getOnceEmail(req, res) {
     var getUserByEmail = [];
     db.collection('users').where("Email", "==", req.params.email).get()
-        .then((snapshot) => {            
+        .then((snapshot) => {
             snapshot.forEach((doc) => {
                 getUserByEmail.push(doc.data());
             });
 
             //~ While not found that email
-            if (getUserByEmail.length == 0){
+            if (getUserByEmail.length == 0) {
                 return res.status(404).json({
                     status: 404,
                     data: "Error, User not found"
@@ -100,7 +100,7 @@ function getOnceEmail(req, res) {
             }
 
             //~ While found email then send only 1 data
-            if (getUserByEmail.length === 1){
+            if (getUserByEmail.length === 1) {
                 let getOnce = getUserByEmail[0];
                 return res.send(getOnce);
             }
@@ -111,9 +111,9 @@ function getOnceEmail(req, res) {
                     status: 404,
                     data: "Error, Found multiple user"
                 })
-            }            
+            }
         })
-        .catch((err) => {                        
+        .catch((err) => {
             return res.status(404).json({
                 status: 404,
                 data: "Error, Endpoint not found"
@@ -131,7 +131,13 @@ function getOnceEmail(req, res) {
 //* }
 //~ use in registration page on mobile app
 function addOnceUser(req, res) {
-    var id = req.body.Id
+    //~ Generate student Id 
+    var getId = req.body.Id
+    var firstId = getId.substr(0, 12)
+    var lastId = getId.substr(12)
+    
+    var id = firstId + "-" + lastId
+    
     //~ Check user already register ?
     let userRef = db.collection('users').doc(id);
     let checkUser = userRef.get()
@@ -170,10 +176,10 @@ function addOnceUser(req, res) {
                                 NameEN: enName,
                                 Email: req.body.Email,
                                 Password: req.body.Password,
-                                Major:major,
-                                Faculty:fac,
-                                Status:stat,
-                                Degree:deg,                                
+                                Major: major,
+                                Faculty: fac,
+                                Status: stat,
+                                Degree: deg,
                                 Level: 0
                             });
 
@@ -203,7 +209,7 @@ function addOnceUser(req, res) {
 //? Update user data
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/level/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
-function updateOnceUser(req, res) {    
+function updateOnceUser(req, res) {
     let userRef = db.collection('users').doc(req.params.id)
     let getRef = userRef.get()
         .then(doc => {
@@ -214,7 +220,7 @@ function updateOnceUser(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
-                    Level: req.body.Level   
+                    Level: req.body.Level
                 });
 
                 return res.status(201).json({
