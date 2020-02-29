@@ -79,6 +79,7 @@ function getOnceUser(req, res) {
         });
 }
 
+//? Get once user filter by email
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/filter/{email}
 //* Detail of once document of 'users' collection (find by email)
 //~ use in mobile app to get data for display to mobile app
@@ -87,20 +88,35 @@ function getOnceEmail(req, res) {
     db.collection('users').where("Email", "==", req.params.email).get()
         .then((snapshot) => {            
             snapshot.forEach((doc) => {
-                getUserByEmail.push(doc.data());            
+                getUserByEmail.push(doc.data());
             });
+
+            //~ While not found that email
+            if (getUserByEmail.length == 0){
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, User not found"
+                })
+            }
+
+            //~ While found email then send only 1 data
             if (getUserByEmail.length === 1){
                 let getOnce = getUserByEmail[0];
                 return res.send(getOnce);
             }
-            else{
-                return res.send(getUserByEmail);
+
+            //~ While bug have same email
+            else {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, Found multiple user"
+                })
             }            
         })
         .catch((err) => {                        
             return res.status(404).json({
                 status: 404,
-                data: "Error, News type not found"
+                data: "Error, Endpoint not found"
             })
         });
 }
