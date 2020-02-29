@@ -1,19 +1,25 @@
 //! Initialize Firebase Admin to App
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 
-let serviceAccount = require('../asset/serviceAccountKey.json');
+let serviceAccount = require("../asset/serviceAccountKey.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
 });
 
+const dlc = require("../service/dlc");
+
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //# Test Section
-var date = "2020-02-01"
-var year = date.substr(0,4)
-var month = date.substr(5,2)
-var day = date.substr(8,9)
-console.log("Day : ",day)
-console.log("Month : ",month)
-console.log("Year : ",year)
+var date = "2020-12-01"
+var newwer = "2020-03-01"
+
+var updateDate = dlc.getDate(date)
+var setUpdateDate = [updateDate[2], dlc.getMonth(updateDate[1]), dlc.getYear(updateDate[0])]
+
+var newDate = dlc.getDate(newwer)
+var setNewDate = [newDate[2], dlc.getMonth(newDate[1]), dlc.getYear(newDate[0])]
+
+console.log(setUpdateDate)
+console.log(setNewDate)

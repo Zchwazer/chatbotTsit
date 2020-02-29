@@ -14,6 +14,9 @@ let db = admin.firestore();
 //~ uuid/V4 = random uuid
 const uuidV4 = require('uuid/v4');
 
+//~ import another function
+const dlc = require('../dlc');
+
 //---------------------------------------------------------------------//
 //! Sec Collection Section
 //? Get All Sec
@@ -111,9 +114,10 @@ function getOnceSection(req, res) {
 //* .json body Example {
 //*     "Sec": 1,
 //*     "Subject" "04000302",
-//*     "Day": "01",
-//*     "Month": "12",
-//*     "Year": "2562"
+//*     "Date": "2020-05-01",
+//*     "Week": "2"
+//*     "Start": "09.00"
+//*     "Finish": "12.00"
 //* }
 //~ use in web app for administrator on web app
 function addOnceSection(req, res) {
@@ -121,7 +125,11 @@ function addOnceSection(req, res) {
     var uuid = uuidV4();
 
     //~ Generate Date
-    var date = [req.body.Day,getMonth(req.body.Month),req.body.Year];
+    var date = dlc.getDate(req.body.Date);
+    var setDate = [date[2],dlc.getMonth(date[1]),dlc.getYear(date[0])]    
+
+    //~ Generate Learning Time
+    var learn = [dlc.getDay(req.body.Week), req.body.Start, req.body.Finish];
 
     //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
     let secRef = db.collection('secs').doc(uuid)
@@ -131,11 +139,12 @@ function addOnceSection(req, res) {
                 let secRef = db.collection('secs').doc(uuid);
 
                 let setAda = secRef.set({
-                    Id : uuid,
+                    Id: uuid,
                     Sec: req.body.Sec,
                     Subject: req.body.Subject,
-                    CreateDate: date,
-                    UpdateDate: date,
+                    CreateDate: setDate,
+                    UpdateDate: setDate,
+                    StudyTime: learn,
                     Status: 1
                 });
 
@@ -175,7 +184,7 @@ function updateSectionStatus(req, res) {
                     status: 404,
                     data: "Error, user not found"
                 })
-            } else {            
+            } else {
                 let setAda = secRef.update({
                     Status: req.body.Status,
                     UpdateDate: [req.body.Day, getMonth(req.body.Month), req.body.Year]
@@ -198,51 +207,6 @@ function updateSectionStatus(req, res) {
 //! WARNING STATUS
 //? Secs status 0 : Close section
 //? Secs status 1 : Open section
-//---------------------------------------------------------------------//
-//! FUNCTION
-//~ Transfer month from number to text
-function getMonth(mon) {
-    switch (mon) {
-        case "1":
-            mon = "มกราคม"
-            break;
-        case "2":
-            mon = "กุมภาพันธ์"
-            break;
-        case "3":
-            mon = "มีนาคม"
-            break;
-        case "4":
-            mon = "เมษายน"
-            break;
-        case "5":
-            mon = "พฤษภาคม"
-            break;
-        case "6":
-            mon = "มิถุนายน"
-            break;
-        case "7":
-            mon = "กรกฎาคม"
-            break;
-        case "8":
-            mon = "สิงหาคม"
-            break;
-        case "9":
-            mon = "กันยายน"
-            break;
-        case "10":
-            mon = "ตุลาคม"
-            break;
-        case "11":
-            mon = "พฤศจิกายน"
-            break;
-        case "12":
-            mon = "ธันวาคม"
-            break;
-    }
-    return mon;
-}
-
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {

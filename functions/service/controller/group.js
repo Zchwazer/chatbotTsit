@@ -146,9 +146,6 @@ function getAllGroupOfStudent(req, res) {
         var teacherAllData = []
         for (var index = 0; index < subjectSnapshot.length; index++) {
             const teacherValue = await checkTeacher(subjectSnapshot[index].Id)            
-            // subjectSnapshot[index].Teacher1 = teacherValue[0]
-            // subjectSnapshot[index].Teacher2 = teacherValue[1]
-            // subjectSnapshot[index].Teacher3 = teacherValue[2]
             subjectSnapshot[index].Teacher = teacherValue
             teacherAllData.push(subjectSnapshot[index])
         }

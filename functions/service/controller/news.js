@@ -14,6 +14,8 @@ let db = admin.firestore();
 //~ uuid/V4 = random uuid
 const uuidV4 = require("uuid/v4");
 
+//~ import another function
+const dlc = require("../dlc");
 //---------------------------------------------------------------------//
 //! User Collection Section
 //? Get All news
@@ -103,10 +105,8 @@ function addOnceNews(req, res) {
     var uuid = uuidV4();
 
     //~ Generate Date
-    var getDate = req.body.Date
-    var day = getDate.substr(8, 9)
-    var month = getMonth(getDate.substr(5, 2))
-    var year = getYear(getDate.substr(0, 4))
+    var getDate = dlc.getDate(req.body.Date)
+    var setDate = [getDate[2],dlc.getMonth(getDate[1]),dlc.getYear(getDate[0])]
 
     //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
     let newsRef = db.collection("news").doc(uuid);
@@ -121,7 +121,7 @@ function addOnceNews(req, res) {
                     Id: uuid,
                     Topic: req.body.Topic,
                     Description: req.body.Description,
-                    Date: [day,month,year],
+                    Date: setDate,
                     Time: req.body.Time,
                     Type: req.body.Type,
                     Status: 1
@@ -183,58 +183,6 @@ function updateNewsData(req, res) {
 //! WARNING
 //? News status 0 = Hidden
 //? News status 1 = Show
-//---------------------------------------------------------------------//
-//! FUNCTION
-//~ Change month from integer to text
-function getMonth(mon) {
-    //~ Change Month to text
-    switch (mon) {
-        case "1":
-            mon = "มกราคม";
-            break;
-        case "2":
-            mon = "กุมภาพันธ์";
-            break;
-        case "3":
-            mon = "มีนาคม";
-            break;
-        case "4":
-            mon = "เมษายน";
-            break;
-        case "5":
-            mon = "พฤษภาคม";
-            break;
-        case "6":
-            mon = "มิถุนายน";
-            break;
-        case "7":
-            mon = "กรกฎาคม";
-            break;
-        case "8":
-            mon = "สิงหาคม";
-            break;
-        case "9":
-            mon = "กันยายน";
-            break;
-        case "10":
-            mon = "ตุลาคม";
-            break;
-        case "11":
-            mon = "พฤศจิกายน";
-            break;
-        case "12":
-            mon = "ธันวาคม";
-            break;
-    }
-    return mon;
-}
-
-//~ Change year from A.D. to B.E.
-function getYear(year) {
-    var newYear = parseInt(year) + 543    
-    var fetchYear = newYear.toString()
-    return fetchYear;
-}
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {

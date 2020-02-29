@@ -14,6 +14,9 @@ let db = admin.firestore();
 //~ uuid/V4 = random uuid
 const uuidV4 = require('uuid/v4');
 
+//! Initialize Feature Function
+const dlc = require('../dlc');
+
 //---------------------------------------------------------------------//
 //! Work Collection
 //? Get All Work
@@ -112,9 +115,13 @@ function addOnceWork(req, res) {
     //~ Initialize UUID
     var uuid = uuidV4();
 
-    //~ Generate Works
-    var createDate = [req.body.CreateDay, getMonth(req.body.CreateMonth), req.body.CreateYear];
-    var sendDate = [req.body.SendDay, getMonth(req.body.SendMonth), req.body.SendYear];
+    //~ Generate Works Date
+    var createDate = dlc.getDate(req.body.CreateDate)
+    var setCreateDate = [createDate[2],dlc.getMonth(createDate[1]),dlc.getYear(createDate[2])]
+    
+    var sendDate = dlc.getDate(req.body.CreateDate)
+    var setSendDate = [sendDate[2],dlc.getMonth(sendDate[1]),dlc.getYear(sendDate[2])]
+    
 
     let workRef = db.collection('works').doc(uuid)
         .set({
@@ -122,9 +129,9 @@ function addOnceWork(req, res) {
             Group: req.body.Group,
             Topic: req.body.Topic,
             Description: req.body.Description,
-            CreateDate: createDate,
-            UpdateDate: createDate,
-            SendDate: sendDate
+            CreateDate: setCreateDate,
+            UpdateDate: setCreateDate,
+            SendDate: setSendDate
         })
 
         .catch(err => {
@@ -144,16 +151,19 @@ function addOnceWork(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/work/workId
 //* List once user in 'works' collection 
 //~ use for user to look once of work in mobile app
-function updateOnceWork(req, res) {
+function updateOnceWork(req, res) {    
     //~ Initialize Date
-    var updateDate = [req.body.Day, getMonth(req.body.Month), req.body.Year];
-    var newDate = [req.body.NewDay, getMonth(req.body.NewMonth), req.body.NewYear]
+    var updateDate = dlc.getDate(req.body.UpdateDate)
+    var setUpdateDate = [updateDate[2],dlc.getMonth(updateDate[1]),dlc.getYear(updateDate[0])]
+
+    var newDate = dlc.getDate(req.body.SendDate)
+    var setNewDate = [newDate[2],dlc.getMonth(newDate[1]),dlc.getYear(newDate[0])]
 
     updateMain()
     
     async function updateMain() {
         try{
-            let workRef = await db.collection('works').doc(req.body.Id).get();
+            let workRef = await db.collection('works').doc(req.params.id).get();
             if (workRef.exists){
                 updateData(workRef)
             }
@@ -173,12 +183,12 @@ function updateOnceWork(req, res) {
     }
 
     function updateData(workRef) {
-        let workUpdate = db.collection('works').doc(req.body.Id)
+        let workUpdate = db.collection('works').doc(req.params.id)
             .update({
-                Topic: newTopic,
-                Description: newDes,
-                SendDay: newDate,
-                UpdateDate: updateDate
+                Topic: req.body.Topic,
+                Description: req.body.Description,
+                SendDate: setNewDate,
+                UpdateDate: setUpdateDate
             })
 
         return res.status(201).json({
@@ -191,51 +201,6 @@ function updateOnceWork(req, res) {
 //---------------------------------------------------------------------//
 //! WARNING
 
-
-//---------------------------------------------------------------------//
-//! FUNCTION
-function getMonth(mon) {
-    //~ Change Month to text
-    switch (mon) {
-        case "1":
-            mon = "มกราคม"
-            break;
-        case "2":
-            mon = "กุมภาพันธ์"
-            break;
-        case "3":
-            mon = "มีนาคม"
-            break;
-        case "4":
-            mon = "เมษายน"
-            break;
-        case "5":
-            mon = "พฤษภาคม"
-            break;
-        case "6":
-            mon = "มิถุนายน"
-            break;
-        case "7":
-            mon = "กรกฎาคม"
-            break;
-        case "8":
-            mon = "สิงหาคม"
-            break;
-        case "9":
-            mon = "กันยายน"
-            break;
-        case "10":
-            mon = "ตุลาคม"
-            break;
-        case "11":
-            mon = "พฤศจิกายน"
-            break;
-        case "12":
-            mon = "ธันวาคม"
-            break;
-    }
-    return mon;
-}
 //---------------------------------------------------------------------//
 //! Export function to root
 module.exports = {
