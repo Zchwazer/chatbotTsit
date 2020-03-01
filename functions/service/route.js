@@ -178,6 +178,9 @@ router.get("/work/filterGr/:group", work.getAllWorkGroup);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/filterId/{workId}
 router.get("/work/filterId/:id" , work.getOnceWork);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/filterNm/{userId}
+router.get("/work/filterNm/:id" , work.getAllNumberWorks);
+
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/work  
 router.post("/work", work.addOnceWork);
 

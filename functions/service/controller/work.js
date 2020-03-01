@@ -83,6 +83,76 @@ function getAllWorkGroup(req, res) {
         });
 }
 
+//? Get All List of work (Number)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/work/filterGr/{groupId}
+//* List all work in 'works' collection filter by group
+//~ use for usr to look all of work in mobile app
+function getAllNumberWorks(req, res) {
+    var id = req.params.id
+    
+    
+    useAsyncAwait()
+    async function useAsyncAwait() {
+        try {
+            let groupFetchData = await getGroupFetchData()
+            let groupFetchStudent = await getGroupFetchStudent(groupFetchData, id)
+            let groupFetchWork = await getGroupFetchWork(groupFetchStudent)            
+
+            return res.status(200).json({
+                status: 200,
+                data: groupFetchWork.length
+            })            
+
+        } catch (err) {            
+            return res.status(404).json({
+                status: 404,
+                data: "Error, data not found"
+            })
+        }
+    }
+
+    async function getGroupFetchData() {
+        groupAllData = []
+
+        let groupSnapshot = db.collection('groups').get()
+
+        for (const groupDoc of (await groupSnapshot).docs) {
+            groupAllData.push(groupDoc.data().Id)
+        }
+
+        return groupAllData
+    }
+
+    async function getGroupFetchStudent(groupFetchData = [], id) {
+        const groupStudentAllData = []
+
+        for (var index = 0; index < groupAllData.length; index++) {
+            let groupStudentSnapshot = await db.collection('groups').doc(groupFetchData[index])
+                .collection('students').doc(id).get()
+
+            if (groupStudentSnapshot.exists) {
+                groupStudentAllData.push(groupAllData[index])
+            }
+        }
+
+        return groupStudentAllData
+    }
+
+    async function getGroupFetchWork(groupFetchStudent = []) {
+        const workAllData = []
+
+        for (var index = 0; index < groupFetchStudent.length; index++) {
+            let groupWorkSnapshot = await db.collection('works').where("Group", "==", groupFetchStudent[index]).get()
+
+            for (const workDoc of (await groupWorkSnapshot).docs) {
+                workAllData.push(workDoc.data().Id)
+            }
+        }
+
+        return workAllData
+    }
+}
+
 //? Get Once Work
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/work/workId
 //* List once user in 'works' collection 
@@ -117,11 +187,11 @@ function addOnceWork(req, res) {
 
     //~ Generate Works Date
     var createDate = dlc.getDate(req.body.CreateDate)
-    var setCreateDate = [createDate[2],dlc.getMonth(createDate[1]),dlc.getYear(createDate[2])]
-    
+    var setCreateDate = [createDate[2], dlc.getMonth(createDate[1]), dlc.getYear(createDate[2])]
+
     var sendDate = dlc.getDate(req.body.CreateDate)
-    var setSendDate = [sendDate[2],dlc.getMonth(sendDate[1]),dlc.getYear(sendDate[2])]
-    
+    var setSendDate = [sendDate[2], dlc.getMonth(sendDate[1]), dlc.getYear(sendDate[2])]
+
 
     let workRef = db.collection('works').doc(uuid)
         .set({
@@ -151,30 +221,28 @@ function addOnceWork(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/work/workId
 //* List once user in 'works' collection 
 //~ use for user to look once of work in mobile app
-function updateOnceWork(req, res) {    
+function updateOnceWork(req, res) {
     //~ Initialize Date
     var updateDate = dlc.getDate(req.body.UpdateDate)
-    var setUpdateDate = [updateDate[2],dlc.getMonth(updateDate[1]),dlc.getYear(updateDate[0])]
+    var setUpdateDate = [updateDate[2], dlc.getMonth(updateDate[1]), dlc.getYear(updateDate[0])]
 
     var newDate = dlc.getDate(req.body.SendDate)
-    var setNewDate = [newDate[2],dlc.getMonth(newDate[1]),dlc.getYear(newDate[0])]
+    var setNewDate = [newDate[2], dlc.getMonth(newDate[1]), dlc.getYear(newDate[0])]
 
     updateMain()
-    
+
     async function updateMain() {
-        try{
+        try {
             let workRef = await db.collection('works').doc(req.params.id).get();
-            if (workRef.exists){
+            if (workRef.exists) {
                 updateData(workRef)
-            }
-            else{
+            } else {
                 return res.status(404).json({
                     status: 404,
                     data: "Error , Work not found"
                 })
             }
-        }        
-        catch(err){
+        } catch (err) {
             return res.status(404).json({
                 status: 404,
                 data: "Error , Endpoint not found"
@@ -207,6 +275,7 @@ module.exports = {
     getAllWork,
     getLimitWork,
     getAllWorkGroup,
+    getAllNumberWorks,
     getOnceWork,
     addOnceWork,
     updateOnceWork
