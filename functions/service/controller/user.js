@@ -207,7 +207,7 @@ function addOnceUser(req, res) {
 }
 
 //? Update user data
-//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/level/{userId}
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/updateLv/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
     let userRef = db.collection('users').doc(req.params.id)

@@ -69,7 +69,7 @@ router.get("/news/filterTp/:type", news.getFilterTypeNews);
 router.post("/news", news.addOnceNews);
 
 //? PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateDt/{newsId}
-// router.put("/news/updateDt", news.updateNewsData);
+router.put("/news/updateDt", news.updateNewsData);
 
 //---------------------------------------------------------------------//
 //~ Subject Collection
