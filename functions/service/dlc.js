@@ -37,6 +37,34 @@ function getDay(day) {
 function getMonth(mon) {
     //~ Change Month to text
     switch (mon) {
+        case "1":
+            mon = "มกราคม"
+            break;
+        case "2":
+            mon = "กุมภาพันธ์"
+            break;
+        case "3":
+            mon = "มีนาคม"
+            break;
+        case "4":
+            mon = "เมษายน"
+            break;
+        case "5":
+            mon = "พฤษภาคม"
+            break;
+        case "6":
+            mon = "มิถุนายน"
+            break;
+        case "7":
+            mon = "กรกฎาคม"
+            break;
+        case "8":
+            mon = "สิงหาคม"
+            break;
+        case "9":
+            mon = "กันยายน"
+            break;
+
         case "01":
             mon = "มกราคม"
             break;
@@ -64,6 +92,7 @@ function getMonth(mon) {
         case "09":
             mon = "กันยายน"
             break;
+            
         case "10":
             mon = "ตุลาคม"
             break;

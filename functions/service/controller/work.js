@@ -186,12 +186,8 @@ function addOnceWork(req, res) {
     var uuid = uuidV4();
 
     //~ Generate Works Date
-    var createDate = dlc.getDate(req.body.CreateDate)
-    var setCreateDate = [createDate[2], dlc.getMonth(createDate[1]), dlc.getYear(createDate[2])]
-
-    var sendDate = dlc.getDate(req.body.CreateDate)
-    var setSendDate = [sendDate[2], dlc.getMonth(sendDate[1]), dlc.getYear(sendDate[2])]
-
+    var createDate = [req.body.CreateDay,dlc.getMonth(req.body.CreateMonth),dlc.getYear(req.body.CreateYear)]
+    var sendDate = [req.body.SendDay,dlc.getMonth(req.body.SendMonth),dlc.getYear(req.body.SendYear)]
 
     let workRef = db.collection('works').doc(uuid)
         .set({
@@ -199,9 +195,9 @@ function addOnceWork(req, res) {
             Group: req.body.Group,
             Topic: req.body.Topic,
             Description: req.body.Description,
-            CreateDate: setCreateDate,
-            UpdateDate: setCreateDate,
-            SendDate: setSendDate
+            CreateDate: createDate,
+            UpdateDate: createDate,
+            SendDate: sendDate
         })
 
         .catch(err => {
