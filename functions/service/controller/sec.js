@@ -10,7 +10,7 @@ const admin = require('firebase-admin');
 
 let db = admin.firestore();
 //---------------------------------------------------------------------//
-//! Initialize UUID
+//! Initialize Function
 //~ uuid/V4 = random uuid
 const uuidV4 = require('uuid/v4');
 

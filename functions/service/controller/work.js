@@ -88,10 +88,10 @@ function getAllWorkGroup(req, res) {
 //* List all work in 'works' collection filter by group
 //~ use for usr to look all of work in mobile app
 function getAllNumberWorks(req, res) {
-    var id = req.params.id
-    
+    var id = req.params.id    
     
     useAsyncAwait()
+    
     async function useAsyncAwait() {
         try {
             let groupFetchData = await getGroupFetchData()
