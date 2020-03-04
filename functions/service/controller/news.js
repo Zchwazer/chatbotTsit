@@ -179,6 +179,40 @@ function updateNewsData(req, res) {
             });
         });
 }
+
+//? Update news data (Soft Delete)
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateSt/{newsId}
+//~ use in web app for administrator to change news description
+function updateNewsStatus(req, res) {
+    let newStatus = req.body.Status
+
+    let newsRef = db.collection("news").doc(req.params.id);
+    let getRef = newsRef
+        .get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                });
+            } else {
+                let setAda = newsRef.update({
+                    Status : newStatus
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                });
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            });
+        });
+}
 //---------------------------------------------------------------------//
 //! WARNING
 //? News status 0 = Hidden
@@ -190,5 +224,6 @@ module.exports = {
     getFilterTypeNews,
     getOnceNews,
     addOnceNews,
-    updateNewsData
+    updateNewsData,
+    updateNewsStatus
 };

@@ -1,41 +1,41 @@
 //-- About comment color definition
 //! Red     : DELETE
 //? Blue    : PUT
-//# Yellow  : POST 
+//# Yellow  : POST
 //* Green   : GET
 //~ Pink    : TOPIC
 //---------------------------------------------------------------------//
 //~ Initialize configuration
-const router = require('express').Router();
+const router = require("express").Router();
 
 //---------------------------------------------------------------------//
 //~ Initialize controller
-const user = require('./controller/user');
-const student = require('./controller/student');
-const news = require('./controller/news');
-const subject = require('./controller/subject');
-const sec = require('./controller/sec');
-const teacher = require('./controller/teacher');
-const group = require('./controller/group');
-const work = require('./controller/work');
-const admin = require('./controller/admin');
+const user = require("./controller/user");
+const student = require("./controller/student");
+const news = require("./controller/news");
+const subject = require("./controller/subject");
+const sec = require("./controller/sec");
+const teacher = require("./controller/teacher");
+const group = require("./controller/group");
+const work = require("./controller/work");
+const admin = require("./controller/admin");
 
 //---------------------------------------------------------------------//
 //~ User Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
-router.get("/user" ,user.getAllUser);
+router.get("/user", user.getAllUser);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/{limitNumber}
-router.get("/user/:limit" ,user.getLimitUser);
+router.get("/user/:limit", user.getLimitUser);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterId/{userId}
-router.get("/user/filterId/:id" ,user.getOnceUser);
+router.get("/user/filterId/:id", user.getOnceUser);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterEm/{userEmail}
-router.get("/user/filterEm/:email", user.getOnceEmail)
+router.get("/user/filterEm/:email", user.getOnceEmail);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
-router.post("/user" ,user.addOnceUser);
+router.post("/user", user.addOnceUser);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/updateLv/{userId}
 router.put("/user/updateLv/:id", user.updateOnceUser);
@@ -49,10 +49,10 @@ router.put("/user/updateEm/:id", user.updateUserEmail);
 //---------------------------------------------------------------------//
 //~ Student Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student
-router.get("/student" ,student.getAllStudent);
+router.get("/student", student.getAllStudent);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterId/{studentId}
-router.get("/student/filterId/:id" ,student.getOnceStudent);
+router.get("/student/filterId/:id", student.getOnceStudent);
 
 //---------------------------------------------------------------------//
 //~ News Collection
@@ -70,6 +70,9 @@ router.post("/news", news.addOnceNews);
 
 //? PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateDt/{newsId}
 router.put("/news/updateDt", news.updateNewsData);
+
+//? PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateSt/{newsId}
+router.put("/news/updateSt", news.updateNewsStatus);
 
 //---------------------------------------------------------------------//
 //~ Subject Collection
@@ -89,22 +92,28 @@ router.get("/subject/filterTp/:type/:limit", subject.getLimitFilterTypeSubject);
 router.get("/subject/filterCr/:credit", subject.getFilterCreditSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterCr/{credit}/{limitNumber}
-router.get("/subject/filterCr/:credit/:limit", subject.getLimitFilterCreditSubject);
+router.get(
+  "/subject/filterCr/:credit/:limit",
+  subject.getLimitFilterCreditSubject
+);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}
 router.get("/subject/filterSt/:status", subject.getFilterStatusSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}/{limitNumber}
-router.get("/subject/filterSt/:status/:limit", subject.getLimitFilterStatusSubject);
+router.get(
+  "/subject/filterSt/:status/:limit",
+  subject.getLimitFilterStatusSubject
+);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{subjectId}
 router.get("/subject/filterId/:id", subject.getOnceSubject);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
-router.post("/subject" ,subject.addOnceSubject);
+router.post("/subject", subject.addOnceSubject);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateSt/{subjectId}
-router.put("/subject/updateSj/:id",subject.updateSubject);
+router.put("/subject/updateSj/:id", subject.updateSubject);
 //---------------------------------------------------------------------//
 //~ Teacher Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/teacher
@@ -128,10 +137,10 @@ router.get("/sec/filterId/:id", sec.getOnceSection);
 router.get("/sec/filterSj/:id", sec.getFilterSubjectSection);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/
-router.post("/sec" , sec.addOnceSection);
+router.post("/sec", sec.addOnceSection);
 
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/updateSt/{secId} 
-router.put("/sec/updateSt/:id" , sec.updateSectionStatus);
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/updateSt/{secId}
+router.put("/sec/updateSt/:id", sec.updateSectionStatus);
 
 //---------------------------------------------------------------------//
 //~ Group Collection
@@ -157,17 +166,17 @@ router.get("/group/filterId/:id/teacher", group.getAllTeacherGroup);
 router.get("/group/filterId/:id/teacher/:teacher", group.getOnceTeacherGroup);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/filterStudentId/{studentId}
-router.get("/group/filterStudentId/:id",group.getAllGroupOfStudent)
+router.get("/group/filterStudentId/:id", group.getAllGroupOfStudent);
 
-//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group 
-router.post("/group" , group.addOnceGroup);
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group
+router.post("/group", group.addOnceGroup);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/student
-router.post("/group/student" , group.addStudentGroup);
+router.post("/group/student", group.addStudentGroup);
 //---------------------------------------------------------------------//
 //~ Work Collection
-//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work 
-router.get("/work" , work.getAllWork);
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work
+router.get("/work", work.getAllWork);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/{limitNumber}
 router.get("/work/:limit", work.getLimitWork);
@@ -176,33 +185,33 @@ router.get("/work/:limit", work.getLimitWork);
 router.get("/work/filterGr/:group", work.getAllWorkGroup);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/filterId/{workId}
-router.get("/work/filterId/:id" , work.getOnceWork);
+router.get("/work/filterId/:id", work.getOnceWork);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/filterNm/{userId}
-router.get("/work/filterNm/:id" , work.getAllNumberWorks);
+router.get("/work/filterNm/:id", work.getAllNumberWorks);
 
-//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/work  
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/work
 router.post("/work", work.addOnceWork);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/updateData/{workId}
-router.put("/work/updateData/:id" , work.updateOnceWork);
+router.put("/work/updateData/:id", work.updateOnceWork);
 
 //---------------------------------------------------------------------//
 //~ Administrator Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin
-router.get("/admin" ,admin.getAllAdmin);
+router.get("/admin", admin.getAllAdmin);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/{limitNumber}
-router.get("/admin/:limit" ,admin.getLimitAdmin);
+router.get("/admin/:limit", admin.getLimitAdmin);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/filterId/{adminId}
-router.get("/admin/filterId/:id" ,admin.getOnceAdmin);
+router.get("/admin/filterId/:id", admin.getOnceAdmin);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/filterEm/{adminEmail}
-router.get("/admin/filterEm/:email", admin.getOnceAdminEmail)
+router.get("/admin/filterEm/:email", admin.getOnceAdminEmail);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin
-router.post("/admin" ,admin.addOnceAdmin);
+router.post("/admin", admin.addOnceAdmin);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/updatePs/{adminId}
 router.put("/admin/updatePs/:id", admin.updateAdminPassword);
