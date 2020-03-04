@@ -88,22 +88,22 @@ function getAllWorkGroup(req, res) {
 //* List all work in 'works' collection filter by group
 //~ use for usr to look all of work in mobile app
 function getAllNumberWorks(req, res) {
-    var id = req.params.id    
-    
+    var id = req.params.id
+
     useAsyncAwait()
-    
+
     async function useAsyncAwait() {
         try {
             let groupFetchData = await getGroupFetchData()
             let groupFetchStudent = await getGroupFetchStudent(groupFetchData, id)
-            let groupFetchWork = await getGroupFetchWork(groupFetchStudent)            
+            let groupFetchWork = await getGroupFetchWork(groupFetchStudent)
 
             return res.status(200).json({
                 status: 200,
                 data: groupFetchWork.length
-            })            
+            })
 
-        } catch (err) {            
+        } catch (err) {
             return res.status(404).json({
                 status: 404,
                 data: "Error, data not found"
@@ -186,8 +186,8 @@ function addOnceWork(req, res) {
     var uuid = uuidV4();
 
     //~ Generate Works Date
-    var createDate = [req.body.CreateDay,dlc.getMonth(req.body.CreateMonth),dlc.getYear(req.body.CreateYear)]
-    var sendDate = [req.body.SendDay,dlc.getMonth(req.body.SendMonth),dlc.getYear(req.body.SendYear)]
+    var createDate = [req.body.CreateDay, dlc.getMonth(req.body.CreateMonth), dlc.getYear(req.body.CreateYear)]
+    var sendDate = [req.body.SendDay, dlc.getMonth(req.body.SendMonth), dlc.getYear(req.body.SendYear)]
 
     let workRef = db.collection('works').doc(uuid)
         .set({
@@ -203,7 +203,7 @@ function addOnceWork(req, res) {
         .catch(err => {
             return res.status(404).json({
                 status: 404,
-                data: "Error , Some input was missing"
+                data: "Error, Some input was missing"
             })
         })
 
@@ -235,13 +235,13 @@ function updateOnceWork(req, res) {
             } else {
                 return res.status(404).json({
                     status: 404,
-                    data: "Error , Work not found"
+                    data: "Error, Work not found"
                 })
             }
         } catch (err) {
             return res.status(404).json({
                 status: 404,
-                data: "Error , Endpoint not found"
+                data: "Error, Endpoint not found"
             })
         }
     }
@@ -262,6 +262,24 @@ function updateOnceWork(req, res) {
     }
 }
 
+//? Delete Once Work
+//# DELETE METHOD => http://localhost:5000/newagent-47c20/us-central1/api/work/workId
+//* Delete once user in 'works' collection 
+//~ use for administrator for delete works
+function deleteOnceWorks(req, res) {
+    db.collection('works').doc(req.params.id).delete()
+        .then(function () {
+            return res.status(201).json({
+                status: 200,
+                data: "Works data delete success"
+        })
+    }).catch(function (err) {
+        return res.status(404).json({
+            status: 404,
+            data: "Error, Endpoint not found"
+        })
+    });
+}
 //---------------------------------------------------------------------//
 //! WARNING
 
@@ -274,5 +292,6 @@ module.exports = {
     getAllNumberWorks,
     getOnceWork,
     addOnceWork,
-    updateOnceWork
+    updateOnceWork,
+    deleteOnceWorks
 }

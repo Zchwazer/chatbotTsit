@@ -71,7 +71,7 @@ router.post("/news", news.addOnceNews);
 //? PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateDt/{newsId}
 router.put("/news/updateDt", news.updateNewsData);
 
-//? PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateSt/{newsId}
+//! PUT =>  https://us-central1-newagent-47c20.cloudfunctions.net/api/news/updateSt/{newsId} (SOFT DELETE)
 router.put("/news/updateSt", news.updateNewsStatus);
 
 //---------------------------------------------------------------------//
@@ -92,19 +92,13 @@ router.get("/subject/filterTp/:type/:limit", subject.getLimitFilterTypeSubject);
 router.get("/subject/filterCr/:credit", subject.getFilterCreditSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterCr/{credit}/{limitNumber}
-router.get(
-  "/subject/filterCr/:credit/:limit",
-  subject.getLimitFilterCreditSubject
-);
+router.get("/subject/filterCr/:credit/:limit",subject.getLimitFilterCreditSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}
 router.get("/subject/filterSt/:status", subject.getFilterStatusSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/filterSt/{status}/{limitNumber}
-router.get(
-  "/subject/filterSt/:status/:limit",
-  subject.getLimitFilterStatusSubject
-);
+router.get("/subject/filterSt/:status/:limit",subject.getLimitFilterStatusSubject);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/subjects/filterId/{subjectId}
 router.get("/subject/filterId/:id", subject.getOnceSubject);
@@ -173,6 +167,10 @@ router.post("/group", group.addOnceGroup);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/student
 router.post("/group/student", group.addStudentGroup);
+
+//! DELETE => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/delete/{groupId}
+router.delete("/group/delete/:id")
+
 //---------------------------------------------------------------------//
 //~ Work Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/work
@@ -195,6 +193,9 @@ router.post("/work", work.addOnceWork);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/updateData/{workId}
 router.put("/work/updateData/:id", work.updateOnceWork);
+
+//! DELETE => https://us-central1-newagent-47c20.cloudfunctions.net/api/work/delete/{workId}
+router.delete("/work/delete/:id", work.deleteOnceWorks);
 
 //---------------------------------------------------------------------//
 //~ Administrator Collection

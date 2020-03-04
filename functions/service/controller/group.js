@@ -521,6 +521,25 @@ function addStudentGroup(req, res) {
             })
         });
 }
+
+//? Delete Once group
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/{groupId}
+//* Detail of once document of 'groups' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function deleteOnceGroup(req, res) {
+    db.collection('groups').doc(req.params.id).delete()
+    .then(function () {
+        return res.status(201).json({
+            status: 200,
+            data: "Works data delete success"
+    })
+}).catch(function (err) {
+    return res.status(404).json({
+        status: 404,
+        data: "Error, Endpoint not found"
+    })
+});
+}
 //---------------------------------------------------------------------//
 //! WARNING
 //? 
@@ -537,5 +556,6 @@ module.exports = {
     getAllTeacherGroup,
     getOnceTeacherGroup,
     addOnceGroup,
-    addStudentGroup
+    addStudentGroup,
+    deleteOnceGroup
 }
