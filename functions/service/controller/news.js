@@ -37,14 +37,15 @@ function getAllNews(req, res) {
                 status: 404,
                 data: "Error, endpoint not found"
             });
+            1;
         });
 }
 
 //? Get Once news
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/{newsId}
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filterId/{newsId}
 //* Detail of once document of 'news' collection (find by id)
 //~ use in mobile app to look once of news
-function getOnceNews(req, res) {
+function getOnceNews(req, res) {    
     let newsRef = db.collection("news").doc(req.params.id);
     let getOnce = newsRef
         .get()
@@ -62,6 +63,29 @@ function getOnceNews(req, res) {
             return res.status(404).json({
                 status: 404,
                 data: "Error, endpoint not found"
+            });
+        });
+}
+
+//? Get all news filter with status 1 (Show)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/filterSt/{status}
+//* Detail of once document of 'news' collection (find by id)
+//~ use in mobile app to look once of news
+function getAllNewsShow(req, res) {
+    var newsAllFilter = [];
+    db.collection("news")
+        .where("Status", "==", parseInt(req.params.status))
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                newsAllFilter.push(doc.data());
+            });
+            return res.send(newsAllFilter);
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Endpoint not found"
             });
         });
 }
@@ -105,8 +129,8 @@ function addOnceNews(req, res) {
     var uuid = uuidV4();
 
     //~ Generate Date
-    var getDate = dlc.getDate(req.body.Date)
-    var setDate = [getDate[2],dlc.getMonth(getDate[1]),dlc.getYear(getDate[0])]
+    var getDate = dlc.getDate(req.body.Date);
+    var setDate = [getDate[2], dlc.getMonth(getDate[1]), dlc.getYear(getDate[0])];
 
     //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
     let newsRef = db.collection("news").doc(uuid);
@@ -129,7 +153,7 @@ function addOnceNews(req, res) {
 
                 return res.status(201).json({
                     status: 201,
-                    data: "Add news into collection complete"   
+                    data: "Add news into collection complete"
                 });
             } else {
                 addOnceNews(req, res);
@@ -146,7 +170,7 @@ function addOnceNews(req, res) {
 //? Update news data
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateDt/{newsId}
 //~ use in web app for administrator to change news description
-function updateNewsData(req, res) {
+function updateOnceNews(req, res) {
     let newsRef = db.collection("news").doc(req.params.id);
     let getRef = newsRef
         .get()
@@ -184,7 +208,7 @@ function updateNewsData(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/updateSt/{newsId}
 //~ use in web app for administrator to change news description
 function updateNewsStatus(req, res) {
-    let newStatus = req.body.Status
+    let newStatus = req.body.Status;
 
     let newsRef = db.collection("news").doc(req.params.id);
     let getRef = newsRef
@@ -197,12 +221,12 @@ function updateNewsStatus(req, res) {
                 });
             } else {
                 let setAda = newsRef.update({
-                    Status : newStatus
+                    Status: newStatus
                 });
 
                 return res.status(201).json({
                     status: 201,
-                    data: "User has been update success"
+                    data: "News status change success"
                 });
             }
         })
@@ -213,6 +237,25 @@ function updateNewsStatus(req, res) {
             });
         });
 }
+
+//? Delete Once News
+//# DELETE METHOD => http://localhost:5000/newagent-47c20/us-central1/api/news/newsId
+//* Delete once user in 'works' collection 
+//~ use for administrator for delete works
+function deleteOnceNews(req, res) {
+    db.collection('news').doc(req.params.id).delete()
+        .then(function () {
+            return res.status(201).json({
+                status: 200,
+                data: "News data delete success"
+        })
+    }).catch(function (err) {
+        return res.status(404).json({
+            status: 404,
+            data: "Error, Endpoint not found"
+        })
+    });
+}
 //---------------------------------------------------------------------//
 //! WARNING
 //? News status 0 = Hidden
@@ -222,8 +265,10 @@ function updateNewsStatus(req, res) {
 module.exports = {
     getAllNews,
     getFilterTypeNews,
+    getAllNewsShow,
     getOnceNews,
     addOnceNews,
-    updateNewsData,
-    updateNewsStatus
-};
+    updateOnceNews,
+    updateNewsStatus,
+    deleteOnceNews
+}
