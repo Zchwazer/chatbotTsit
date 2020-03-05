@@ -12,7 +12,8 @@ const dlc = require("../service/dlc");
 let db = admin.firestore();
 //---------------------------------------------------------------------//
 //# Test Section
-var id = "1159104003382"
-var firstId = id.substr(0,12)
-var lastId = id.substr(12) 
-console.log(firstId + "-" + lastId)
+var stuId = "1159104003382"
+// var firstId = id.substr(0,12)
+// var lastId = id.substr(12) 
+var setId =  stuId.substr(0, 12) + "-" + stuId.substr(12)    
+console.log(setId)

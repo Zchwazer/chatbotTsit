@@ -54,6 +54,12 @@ router.get("/student", student.getAllStudent);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterId/{studentId}
 router.get("/student/filterId/:id", student.getOnceStudent);
 
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/
+router.post("/student", student.addOnceStudent);
+
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/updateDt/{studentId}
+router.put("/student/updateDt/:id", student.updateStudentData);
+
 //---------------------------------------------------------------------//
 //~ News Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/news
