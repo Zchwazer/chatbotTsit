@@ -157,7 +157,7 @@ router.put("/sec/updateSt/:id", sec.updateSectionStatus);
 //---------------------------------------------------------------------//
 //~ Group Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/group
-router.get("/group", group.getAllGroup);
+router.get("/group", group.getAllDataGroup);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/{limitNumber}
 router.get("/group/:limit", group.getLimitGroup);
@@ -179,6 +179,9 @@ router.get("/group/filterId/:id/teacher/:teacher", group.getOnceTeacherGroup);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/filterStudentId/{studentId}
 router.get("/group/filterStudentId/:id", group.getAllGroupOfStudent);
+
+// //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/group/all
+// router.get("/group/all/getAll", group.getAllDataGroup);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/group
 router.post("/group", group.addOnceGroup);

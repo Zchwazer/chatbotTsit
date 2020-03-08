@@ -219,6 +219,52 @@ function getAllStudentGroup(req, res) {
         });
 }
 
+//? Get All group (filterStudent)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterStudentId/{studentId}
+//* List all group in 'group' collection (with limiter)
+//~ use in web app (admin) to look all of subject in web app
+function getAllDataGroup(req, res) {
+    getData()
+
+    async function getData() {
+        try{
+            let groupAllData = await fetchGroupData()
+            let secAllData = await fetchSecData(groupAllData)
+            return res.send(secAllData)
+        }
+        catch (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Endpoint not found"
+            })
+        }        
+    }
+    
+    async function fetchGroupData() {
+        var groupAllData = []
+        var groupSnapshot = db.collection('groups').get()
+        for (const groupDoc of (await groupSnapshot).docs) {
+            groupAllData.push(groupDoc.data())
+        }
+        return groupAllData
+    }
+    
+    async function fetchSecData(groupAllData = []) {
+        for (var index = 0; index < groupAllData.length; index++) {
+            const secSnapshot = await checkSecData(groupAllData[index].Sec)        
+            if (secSnapshot.exists){
+                groupAllData[index].Sec = secSnapshot.data()        
+            }        
+        }
+        return groupAllData
+    }
+    
+    async function checkSecData(secId) {    
+        let secDoc = db.collection('secs').doc(secId).get()
+        return secDoc
+    }
+}
+
 //? Get Once student in Group 
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterId/{groupId}/student/{studentId}
 //* Detail of once document of 'groups' collection (find by id)
@@ -550,6 +596,7 @@ module.exports = {
     getAllGroup,
     getLimitGroup,
     getOnceGroup,
+    getAllDataGroup,
     getAllStudentGroup,
     getAllGroupOfStudent,
     getOnceStudentGroup,
