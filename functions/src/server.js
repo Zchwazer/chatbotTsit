@@ -31,8 +31,8 @@ app.use(cors({
             status: 404,
             data: "Error endpoint not found"
         }));
-
 //---------------------------------------------------------------------//
+//! Export Module
 module.exports = app;
 
 //# Use "firebase serve" in cmd to test function

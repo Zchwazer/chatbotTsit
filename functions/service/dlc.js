@@ -116,6 +116,7 @@ function getYear(year) {
 //---------------------------------------------------------------------//
 //! Export function to root
 module.exports = {
+    getDay,
     getDate,
     getMonth,
     getYear

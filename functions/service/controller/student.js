@@ -56,9 +56,99 @@ function getOnceStudent(req, res) {
             })
         });
 }
+
+//? Add once user
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/student/
+//* add of once student
+//~ use in mobile app to get data for display to mobile app
+function addOnceStudent(req, res) {
+    let stuId = req.body.Id
+    var setId = stuId.substr(0, 12) + "-" + stuId.substr(12)
+
+    let studentRef = db.collection('students').doc(setId).get()
+    let studentChk = studentRef.then(stuDoc => {
+        if (stuDoc.exists){
+            return res.status(404).json({
+                status: 404,
+                data: "Error, student id already add"
+            })
+        }
+        else {
+            addStudent();
+        }
+    })
+    
+    function addStudent(){
+        let studentSet = db.collection('students').doc(setId)
+        .set({
+            Id: setId,
+            NameTH: req.body.NameTH,
+            NameEN: req.body.NameEN,
+            Faculty: req.body.Faculty,
+            Major: req.body.Major,
+            Degree: req.body.Degree,
+            Status: req.body.Status
+        })
+
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Some input was missing"
+            })
+        })
+
+        return res.status(201).json({
+            status: 201,
+            data: "Student add success"
+        })
+    }    
+}
+
+//? Update student data
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/student/updateDt/{studentId}
+//~ use in web app for administrator to change news description
+function updateStudentData(req, res) {        
+    let stuId = req.params.id
+    var chkId = stuId.substr(0, 12) + "-" + stuId.substr(12)
+
+    let studentRef = db.collection("students").doc(chkId);
+    let getRef = studentRef
+        .get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, student not found"
+                });
+            } else {
+                let setAda = studentRef.update({
+                    Id: req.body.Id,
+                    NameTH: req.body.NameTH,
+                    NameEN: req.body.NameEN,
+                    Faculty: req.body.Faculty,
+                    Major: req.body.Major,
+                    Degree: req.body.Degree,
+                    Status: req.body.Status
+                });
+
+                return res.status(201).json({
+                    status: 201,
+                    data: "Student has been update success"
+                });
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, some input was missing"
+            });
+        });
+}
 //---------------------------------------------------------------------//
 //! Export function to route
 module.exports = {
     getAllStudent,
-    getOnceStudent
+    getOnceStudent,
+    addOnceStudent,
+    updateStudentData
 }
