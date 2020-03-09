@@ -64,7 +64,7 @@ function getLimitGroup(req, res) {
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/group/filterStudentId/{studentId}
 //* List all group in 'group' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
-function getAllGroupOfStudent(req, res) {    
+function getAllGroupOfStudent(req, res) {
     useAsyncAwait()
     async function useAsyncAwait() {
         try {
@@ -145,19 +145,19 @@ function getAllGroupOfStudent(req, res) {
     async function getTeacherSnapshot(subjectSnapshot = []) {
         var teacherAllData = []
         for (var index = 0; index < subjectSnapshot.length; index++) {
-            const teacherValue = await checkTeacher(subjectSnapshot[index].Id)            
+            const teacherValue = await checkTeacher(subjectSnapshot[index].Id)
             subjectSnapshot[index].Teacher = teacherValue
             teacherAllData.push(subjectSnapshot[index])
         }
         return teacherAllData
     }
-    
+
     async function checkTeacher(groupId) {
         var teacherAllData = []
         var teacherSnapshot = db.collection('groups').doc(groupId).collection('teachers').get()
         for (const teacherDoc of (await teacherSnapshot).docs) {
             teacherAllData.push(teacherDoc.data().NameTH)
-        }    
+        }
         return teacherAllData
     }
 
@@ -227,19 +227,18 @@ function getAllDataGroup(req, res) {
     getData()
 
     async function getData() {
-        try{
+        try {
             let groupAllData = await fetchGroupData()
             let secAllData = await fetchSecData(groupAllData)
             return res.send(secAllData)
-        }
-        catch (err) {
+        } catch (err) {
             return res.status(404).json({
                 status: 404,
                 data: "Error, Endpoint not found"
             })
-        }        
+        }
     }
-    
+
     async function fetchGroupData() {
         var groupAllData = []
         var groupSnapshot = db.collection('groups').get()
@@ -248,18 +247,18 @@ function getAllDataGroup(req, res) {
         }
         return groupAllData
     }
-    
+
     async function fetchSecData(groupAllData = []) {
         for (var index = 0; index < groupAllData.length; index++) {
-            const secSnapshot = await checkSecData(groupAllData[index].Sec)        
-            if (secSnapshot.exists){
-                groupAllData[index].Sec = secSnapshot.data()        
-            }        
+            const secSnapshot = await checkSecData(groupAllData[index].Sec)
+            if (secSnapshot.exists) {
+                groupAllData[index].Sec = secSnapshot.data()
+            }
         }
         return groupAllData
     }
-    
-    async function checkSecData(secId) {    
+
+    async function checkSecData(secId) {
         let secDoc = db.collection('secs').doc(secId).get()
         return secDoc
     }
@@ -574,17 +573,17 @@ function addStudentGroup(req, res) {
 //~ use in mobile app to get data for display to mobile app
 function deleteOnceGroup(req, res) {
     db.collection('groups').doc(req.params.id).delete()
-    .then(function () {
-        return res.status(201).json({
-            status: 200,
-            data: "Works data delete success"
-    })
-}).catch(function (err) {
-    return res.status(404).json({
-        status: 404,
-        data: "Error, Endpoint not found"
-    })
-});
+        .then(function () {
+            return res.status(201).json({
+                status: 200,
+                data: "Works data delete success"
+            })
+        }).catch(function (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Endpoint not found"
+            })
+        });
 }
 //---------------------------------------------------------------------//
 //! WARNING

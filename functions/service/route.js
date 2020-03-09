@@ -118,8 +118,15 @@ router.get("/subject/filterId/:id", subject.getOnceSubject);
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject
 router.post("/subject", subject.addOnceSubject);
 
-//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateSj/{subjectId}
-router.put("/subject/updateSj/:id", subject.updateSubject);
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateDt/{subjectId}
+router.put("/subject/updateDt/:id", subject.updateDataSubject);
+
+//! PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/updateSt/{subjectId} (SOFT DELETE)
+router.put("/subject/updateSt/:id", subject.updateStatusSubject);
+
+//! DELETE => https://us-central1-newagent-47c20.cloudfunctions.net/api/subject/delete/{subjectId}
+router.delete("/subject/delete/:id", subject.deleteOnceSubject);
+
 //---------------------------------------------------------------------//
 //~ Teacher Collection
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/teacher

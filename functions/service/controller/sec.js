@@ -124,6 +124,7 @@ function addOnceSection(req, res) {
     //~ Set Status
     var secId
     var groupId
+    
     //~ Generate UUID 
     var secUUID = uuidV4();
     var groupUUID = uuidV4();
@@ -154,12 +155,6 @@ function addOnceSection(req, res) {
                 });
 
                 secId = secUUID
-
-                // return res.status(201)
-                //     .json({
-                //         status: 201,
-                //         data: "Add sec complete"
-                //     })
 
             } else {
                 addOnceSection(req, res);
@@ -194,10 +189,11 @@ function addOnceSection(req, res) {
                                 Sec: secId
                             });
 
-                            groupId = groupUUID                            
+                            groupId = groupUUID
 
+                            //! TEACHER SECTION
                             //~ Check Teacher each section
-                            //~ 1st Teacher of group must have !!! 
+                            //* 1st Teacher of group must have !!! 
                             if (req.body.Teacher1 == "") {
                                 return res.status(404).json({
                                     status: 404,
@@ -241,7 +237,7 @@ function addOnceSection(req, res) {
                                     });
                             }
 
-                            //~ If Have 2nd Teacher
+                            //* If Have 2nd Teacher
                             if (req.body.Teacher2 != "") {
                                 let teachRef = db.collection('teachers').doc(req.body.Teacher2);
                                 let teachOnce = teachRef.get()
@@ -281,7 +277,7 @@ function addOnceSection(req, res) {
                                     });
                             }
 
-                            //~ If Have 3rd Teacher -> 3rd can be add if 2nd have teacher
+                            //* If Have 3rd Teacher -> 3rd can be add if 2nd have teacher
                             if (req.body.Teacher2 != "" && req.body.Teacher3 != "") {
                                 let teachRef = db.collection('teachers').doc(req.body.Teacher3);
                                 let teachOnce = teachRef.get()
@@ -320,19 +316,14 @@ function addOnceSection(req, res) {
                                         })
                                     });
                             }
-
-                            // return res.status(201).json({
-                            //     status: 201,
-                            //     data: "Data has been add success"
-                            // })
                         }
                     })
 
                 return res.status(201)
-                        .json({
-                            status: 201,
-                            data: "Data has been add complete"
-                        })
+                    .json({
+                        status: 201,
+                        data: "Data has been add complete"
+                    })
 
             } else {
                 return res.status(404).json({
@@ -347,13 +338,6 @@ function addOnceSection(req, res) {
                 data: "Error, endpoint not found"
             })
         });
-
-    //! TEACHER SECTION    
-    function sendTeacher(groupId) {
-
-    }
-
-
 }
 
 //? Update sec status

@@ -397,7 +397,6 @@ function updateTypeSubject(req, res) {
 function updateStatusSubject(req, res) {
     //~ Status is integer 
     var id = req.params.id
-    var stat = req.body.Status
 
     let subjectRef = db.collection('subjects').doc(id)
     let getRef = subjectRef.get()
@@ -409,7 +408,7 @@ function updateStatusSubject(req, res) {
                 })
             } else {
                 let setAda = subjectRef.update({
-                    Status: stat
+                    Status: req.body.Status
                 });
 
                 return res.status(201).json({
@@ -425,47 +424,59 @@ function updateStatusSubject(req, res) {
             })
         });
 }
-async function updateSubject(req, res) {
-    //~ Initialize Date
-    var updateDate = [req.body.Day, getMonth(req.body.Month), req.body.Year];
-    var newDate = [req.body.NewDay, getMonth(req.body.NewMonth), req.body.NewYear]
 
-    var subjectRef = await getSubjectRef()
+//? Update subject data
+//# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/updateDt/{subjectId}
+//~ use in web app for administrator to change data in subjects collection
+function updateDataSubject(req, res) {
+    let subjectRef = db.collection("subjects").doc(req.params.id);
+    let getRef = subjectRef
+        .get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                });
+            } else {
+                let setAda = subjectRef.update({
+                    NameTH : req.body.NameTH,
+                    NameEN : req.body.NameEN,
+                    Credit : req.body.Credit,
+                    Type : req.body.Type                    
+                });
 
-    if (subjectRef.exists) {
-        updateData(subjectRef)
-    } else {
-        return res.status(404).json({
-            status: 404,
-            data: "Error , Work not found"
+                return res.status(201).json({
+                    status: 201,
+                    data: "User has been update success"
+                });
+            }
         })
-    }
-    async function getSubjectRef() {
-        try {
-            let subjectRef = await db.collection('subjects').doc(req.body.Id).get();
-            return subjectRef
-        } catch (err) {
+        .catch(err => {
             return res.status(404).json({
                 status: 404,
-                data: "Error , Endpoint not found"
-            })
-        }
-    }
+                data: "Error, some input was missing"
+            });
+        });
+}
 
-    function updateData(workRef) {
-        let workUpdate = db.collection('subjects').doc(req.body.Id)
-            .update({
-                Topic: newTopic,
-                Description: newDes,
-                SendDay: newDate,
-                UpdateDate: updateDate
+//? Delete Once group
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/{subjectId}
+//* Detail of once document of 'subject' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function deleteOnceSubject(req, res) {
+    db.collection('subjects').doc(req.params.id).delete()
+        .then(function () {
+            return res.status(201).json({
+                status: 200,
+                data: "Subject data delete success"
             })
-
-        return res.status(201).json({
-            status: 201,
-            data: "Your data update success"
-        })
-    }
+        }).catch(function (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Endpoint not found"
+            })
+        });
 }
 //---------------------------------------------------------------------//
 //! WARNING TYPE
@@ -488,5 +499,7 @@ module.exports = {
     getLimitFilterStatusSubject,
     getOnceSubject,
     addOnceSubject,
-    updateSubject
+    updateStatusSubject,
+    updateDataSubject,
+    deleteOnceSubject
 }
