@@ -155,8 +155,14 @@ router.get("/sec/filterId/:id", sec.getOnceSection);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/filterSj/{subjectId}
 router.get("/sec/filterSj/:id", sec.getFilterSubjectSection);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/student/{secId}
+router.get("/sec/student/:id", sec.getAllStudentSection);
+
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/
 router.post("/sec", sec.addOnceSection);
+
+//# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/student/{secId}
+router.post("/sec/student/:id", sec.addStudentSec);
 
 //! PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/updateSt/{secId} (SOFT DELETE)
 router.put("/sec/updateSt/:id", sec.updateSectionStatus);

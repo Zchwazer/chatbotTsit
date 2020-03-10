@@ -40,7 +40,7 @@ function getAllSection(req, res) {
         });
 }
 
-//? Get All subjects (Limit)
+//? Get All sec (Limit)
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/sec/limit/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
@@ -62,7 +62,7 @@ function getLimitSec(req, res) {
         });
 }
 
-//? Get All subjects (Filter subject)
+//? Get All sec (Filter subject)
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/sec/filterSj/{subjectId}
 //* List all secs in 'secs' collection (filter subject id)
 //~ use in web app (admin) to look all of subject in web app
@@ -74,6 +74,29 @@ function getFilterSubjectSection(req, res) {
                 subjectAllData.push(doc.data());
             });
             return res.send(subjectAllData);
+        })
+        .catch((err) => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, endpoint not found"
+            })
+        });
+}
+
+//? Get All Student Sec
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/sec/student/
+//* List all user in 'secs' collection 
+//~ use in web app (admin) to look all of subject in web app
+function getAllStudentSection(req, res) {
+    var studentAllData = [];
+    var secId = req.params.id
+
+    let secRef = db.collection('secs').doc(secId).collection('students').get()
+        .then((snapshot) => {
+            snapshot.forEach((doc) => {
+                studentAllData.push(doc.data());
+            });
+            return res.send(studentAllData)
         })
         .catch((err) => {
             return res.status(404).json({
@@ -308,6 +331,44 @@ function addOnceSection(req, res) {
     }
 }
 
+//? Add student in sec
+//# POST METHOD => http://localhost:5000/newagent-47c20/us-central1/api/secs/student/{secsId}
+//* Add .json data to 'secs' collection in cloud firestore
+//* .json body Example {
+//*     "Id":"115910400338-2",    
+//* }
+//~ use in web app for administrator to add student in sec
+function addStudentSec(req, res) {
+    var studentId = req.body.Id
+    var secId = req.params.id
+
+    //~ Use Case
+    getStarted()
+
+    async function getStarted() {
+        let secRef = await db.collection('secs').doc(secId).get()
+        let stuRef = await db.collection('users').doc(studentId).get()
+
+        if (!secRef.exists || !stuRef.exists) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, data not found"
+            })
+        } else {
+            let dataRef = await db.collection('secs').doc(secId).collection('students').doc(studentId)
+            let setData = dataRef.set({
+                "Id": studentId,
+                "NameTH": stuRef.data().NameTH,
+                "NameEN": stuRef.data().NameEN
+            })
+            return res.status(201).json({
+                status: 201,
+                data: "Add student success"
+            })
+        }
+    }
+}
+
 //? Update sec status
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/secs/updateSt/{secsId}
 //* Add .json data to 'secs' collection in cloud firestore
@@ -357,6 +418,8 @@ module.exports = {
     getLimitSec,
     getOnceSection,
     getFilterSubjectSection,
+    getAllStudentSection,
     addOnceSection,
+    addStudentSec,
     updateSectionStatus
 }
