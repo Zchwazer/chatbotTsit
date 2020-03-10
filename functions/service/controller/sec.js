@@ -121,223 +121,191 @@ function getOnceSection(req, res) {
 //* }
 //~ use in web app for administrator on web app
 function addOnceSection(req, res) {
-    //~ Set Status
-    var secId
-    var groupId
-    
-    //~ Generate UUID 
-    var secUUID = uuidV4();
-    var groupUUID = uuidV4();
+    //# Body Section
+    var secId = uuidV4()
+    var groupId = uuidV4()
+    var secData = req.body.Sec
+    var subjectData = req.body.Subject
+    var getDateData = req.body.Date
+    var weekData = req.body.Week
+    var startData = req.body.Start
+    var finishData = req.body.Finish
+    var teacherData1 = req.body.Teacher1
+    var teacherData2 = req.body.Teacher2
+    var teacherData3 = req.body.Teacher3
 
-    //! SEC SECTION
     //~ Generate Date
-    var date = dlc.getDate(req.body.Date);
-    var setDate = [date[2], dlc.getMonth(date[1]), dlc.getYear(date[0])]
+    var newDate = dlc.getDate(getDateData);
+    var dateData = [newDate[2], dlc.getMonth(newDate[1]), dlc.getYear(newDate[0])]
 
     //~ Generate Learning Time
-    var learn = [dlc.getDay(req.body.Week), req.body.Start, req.body.Finish];
+    var studyData = [dlc.getDay(weekData), startData, finishData];
 
-    //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
-    let secRef = db.collection('secs').doc(secUUID)
-    let getOnce = secRef.get()
-        .then(doc => {
-            if (!doc.exists) {
-                let secRef = db.collection('secs').doc(secUUID);
+    //! USE CASE SECTION
+    getStarted()
 
-                let setAda = secRef.set({
-                    Id: secUUID,
-                    Sec: req.body.Sec,
-                    Subject: req.body.Subject,
-                    CreateDate: setDate,
-                    UpdateDate: setDate,
-                    StudyTime: learn,
-                    Status: 1
-                });
+    //# Test Section
+    async function getStarted() {
+        try {
+            let statusA = await getSubjectStatus()
+            let statusB = await getSecStatus()
 
-                secId = secUUID
+            if (statusA === true && statusB === true) {
+                addSec()
+                addGroup()
 
-            } else {
-                addOnceSection(req, res);
-            }
-        })
-        .catch(err => {
-            return res.status(404).json({
-                status: 404,
-                data: "Error, endpoint not found"
-            })
-        });
+                var teacherData = await implementTeacher()
+                addTeacher(teacherData)
 
-    //! GROUP SECTION
-    //~ Check uuid is not generate same as uuid in collection (But is very hard to generate same like before)
-    let groupRef = db.collection('groups').doc(groupUUID)
-    let groupGetOnce = groupRef.get()
-        .then(doc => {
-            if (!doc.exists) {
-                //~ Check section is open or not
-                let secRef = db.collection('secs').doc(secId).get()
-                    .then(doc => {
-                        if (!doc.exists) {
-                            return res.status(404).json({
-                                status: 404,
-                                data: "Error, this section doesn't exist."
-                            })
-                        } else {
-                            let groupRef = db.collection('groups').doc(groupUUID);
-
-                            let setAda = groupRef.set({
-                                Id: groupUUID,
-                                Sec: secId
-                            });
-
-                            groupId = groupUUID
-
-                            //! TEACHER SECTION
-                            //~ Check Teacher each section
-                            //* 1st Teacher of group must have !!! 
-                            if (req.body.Teacher1 == "") {
-                                return res.status(404).json({
-                                    status: 404,
-                                    data: "Error, some input was missing"
-                                })
-                            } else {
-                                let teachRef = db.collection('teachers').doc(req.body.Teacher1);
-                                let teachOnce = teachRef.get()
-                                    .then(docTeach => {
-                                        if (!docTeach.exists) {
-                                            return res.status(404).json({
-                                                status: 404,
-                                                data: "Error, Teacher not found"
-                                            })
-                                        } else {
-                                            //~ Add data to users collection
-                                            let teacherDocRef = db.collection('groups').doc(groupId)
-                                                .collection('teachers').doc(req.body.Teacher1);
-
-                                            let setAda = teacherDocRef.set({
-                                                Id: req.body.Teacher1,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            });
-
-                                            let teacherSecRef = db.collection('secs').doc(secId)
-                                                .collection('teachers').doc(req.body.Teacher1);
-
-                                            let setXta = teacherSecRef.set({
-                                                Id: req.body.Teacher1,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            })
-                                        }
-                                    })
-                                    .catch(err => {
-                                        return res.status(404).json({
-                                            status: 404,
-                                            data: "Error, some input was missing"
-                                        })
-                                    });
-                            }
-
-                            //* If Have 2nd Teacher
-                            if (req.body.Teacher2 != "") {
-                                let teachRef = db.collection('teachers').doc(req.body.Teacher2);
-                                let teachOnce = teachRef.get()
-                                    .then(docTeach => {
-                                        if (!docTeach.exists) {
-                                            return res.status(404).json({
-                                                status: 404,
-                                                data: "Error, Teacher not found"
-                                            })
-                                        } else {
-                                            //~ Add data to users collection
-                                            let teacherDocRef = db.collection('groups').doc(groupId)
-                                                .collection('teachers').doc(req.body.Teacher2);
-
-                                            let setAda = teacherDocRef.set({
-                                                Id: req.body.Teacher2,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            });
-
-                                            let teacherSecRef = db.collection('secs').doc(secId)
-                                                .collection('teachers').doc(req.body.Teacher2);
-
-                                            let setXta = teacherSecRef.set({
-                                                Id: req.body.Teacher2,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            });
-
-                                        }
-                                    })
-                                    .catch(err => {
-                                        return res.status(404).json({
-                                            status: 404,
-                                            data: "Error, some input was missing"
-                                        })
-                                    });
-                            }
-
-                            //* If Have 3rd Teacher -> 3rd can be add if 2nd have teacher
-                            if (req.body.Teacher2 != "" && req.body.Teacher3 != "") {
-                                let teachRef = db.collection('teachers').doc(req.body.Teacher3);
-                                let teachOnce = teachRef.get()
-                                    .then(docTeach => {
-                                        if (!docTeach.exists) {
-                                            return res.status(404).json({
-                                                status: 404,
-                                                data: "Error, Teacher not found"
-                                            })
-                                        } else {
-                                            //~ Add data to users collection
-                                            let teacherDocRef = db.collection('groups').doc(groupId)
-                                                .collection('teachers').doc(req.body.Teacher3);
-
-                                            let setAda = teacherDocRef.set({
-                                                Id: req.body.Teacher3,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            });
-
-                                            let teacherSecRef = db.collection('secs').doc(secId)
-                                                .collection('teachers').doc(req.body.Teacher3);
-
-                                            let setXta = teacherSecRef.set({
-                                                Id: req.body.Teacher3,
-                                                NameTH: docTeach.data().NameTH,
-                                                NameEN: docTeach.data().NameEN
-                                            });
-
-                                        }
-                                    })
-                                    .catch(err => {
-                                        return res.status(404).json({
-                                            status: 404,
-                                            data: "Error, some input was missing"
-                                        })
-                                    });
-                            }
-                        }
-                    })
-
-                return res.status(201)
-                    .json({
-                        status: 201,
-                        data: "Data has been add complete"
-                    })
-
-            } else {
-                return res.status(404).json({
-                    status: 404,
-                    data: "Error, some input was missing"
+                return res.status(201).json({
+                    status: 201,
+                    data: "Data has been add success"
                 })
             }
-        })
-        .catch(err => {
+
+        } catch (err) {
             return res.status(404).json({
                 status: 404,
-                data: "Error, endpoint not found"
+                data: "Error, Endpoint not found"
             })
+        }
+    }
+
+    //! SUBJECT FUNCTION DATA
+    async function getSubjectStatus() {
+        let sectionA = false
+        try {
+            const getSubject = await checkSubject()
+            if (getSubject.exists) {
+                sectionA = true
+                return sectionA
+            }
+        } catch (err) {
+            return sectionA
+        }
+    }
+
+    //! SEC FUNCTION DATA
+    async function getSecStatus() {
+        let sectionB = false
+        try {
+            const getSec = await checkSec()
+            if (getSec.exists) {
+                return sectionB
+            } else {
+                sectionB = true
+                return sectionB
+            }
+        } catch (err) {
+            return sectionB
+        }
+    }
+
+    //* SUBJECT SECTION
+    function checkSubject() {
+        let subjectRef = db.collection('subjects').doc(subjectData).get()
+        return subjectRef
+    }
+
+    //* SEC SECTION
+    //~ Check Sec UUID 
+    function checkSec() {
+        let secRef = db.collection('secs').doc(secId).get()
+        return secRef
+    }
+
+    //~ Add Sec
+    function addSec() {
+        let secRef = db.collection('secs').doc(secId);
+
+        let setAda = secRef.set({
+            Id: secId,
+            Sec: secData,
+            Subject: subjectData,
+            CreateDate: dateData,
+            UpdateDate: dateData,
+            StudyTime: studyData,
+            Status: 1
         });
+    }
+
+    //* GROUP SECTION
+    //~ Add Group
+    function addGroup() {
+        let groupRef = db.collection('groups').doc(groupId);
+
+        let setAda = groupRef.set({
+            Id: groupId,
+            Sec: secId
+        });
+    }
+
+    //* TEACHER SECTION
+    //~ Check teacher data
+    function checkTeacher(teacherId) {
+        let teacherRef = db.collection('teachers').doc(teacherId).get()
+        return teacherRef
+    }
+
+    //~ Get teacher data
+    async function implementTeacher() {
+        try {
+            var teacherAllData = []
+            if (teacherData1 != "") {
+                const tchA = await checkTeacher(teacherData1)
+                if (tchA.exists) {
+                    teacherAllData.push(tchA.data())
+                }
+            } else {
+                console.log('error')
+            }
+
+            if (teacherData2 != "") {
+                const tchB = await checkTeacher(teacherData2)
+                if (tchB.exists) {
+                    teacherAllData.push(tchB.data())
+                }
+            }
+
+            if (teacherData3 != "") {
+                const tchC = await checkTeacher(teacherData3)
+                if (tchC.exists) {
+                    teacherAllData.push(tchC.data())
+                }
+            }
+
+            return teacherAllData
+
+        } catch (err) {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, Endpoint not found"
+            })
+        }
+    }
+
+    //~ Add Teacher
+    function addTeacher(teacherData = []) {
+        for (var index = 0; index < teacherData.length; index++) {
+            //# Add Teacher to Sec
+            let teacherSec = db.collection('secs').doc(secId).collection('teachers').doc(teacherData[index].Id)
+
+            let setSecData = teacherSec.set({
+                Id: teacherData[index].Id,
+                NameTH: teacherData[index].NameTH,
+                NameEN: teacherData[index].NameEN
+            });
+
+            //# Add Teacher to Group
+            let teacherGroup = db.collection('groups').doc(groupId).collection('teachers').doc(teacherData[index].Id)
+
+            let setGroupData = teacherGroup.set({
+                Id: teacherData[index].Id,
+                NameTH: teacherData[index].NameTH,
+                NameEN: teacherData[index].NameEN
+            });
+        }
+    }
 }
 
 //? Update sec status
