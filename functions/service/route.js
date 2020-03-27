@@ -34,6 +34,9 @@ router.get("/user/filterId/:id", user.getOnceUser);
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterEm/{userEmail}
 router.get("/user/filterEm/:email", user.getOnceEmail);
 
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/user/filterSign/{userId}
+router.get("/user/filterSign/:id", user.getOnceUserHaveSign);
+
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/user
 router.post("/user", user.addOnceUser);
 
@@ -53,6 +56,9 @@ router.get("/student", student.getAllStudent);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterId/{studentId}
 router.get("/student/filterId/:id", student.getOnceStudent);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterSign/{studentId}
+router.get("/student/filterSign/:id", student.getOnceStudentHaveSign);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/
 router.post("/student", student.addOnceStudent);
@@ -164,8 +170,8 @@ router.post("/sec", sec.addOnceSection);
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/student/{secId}
 router.post("/sec/student/:id", sec.addStudentSec);
 
-//! PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/updateSt/{secId} (SOFT DELETE)
-router.put("/sec/updateSt/:id", sec.updateSectionStatus);
+//? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/sec/updateDt/{secId}
+router.put("/sec/updateDt/:id", sec.updateSectionStatus);
 
 //---------------------------------------------------------------------//
 //~ Group Collection

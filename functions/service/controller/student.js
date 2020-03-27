@@ -32,6 +32,37 @@ function getAllStudent(req, res) {
         });
 }
 
+//? Get Once student (with sign)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/userSign/{userId}
+//* Detail of once document of 'users' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function getOnceStudentHaveSign(req, res) {
+    var getId = req.params.id
+    var firstId = getId.substr(0, 12)
+    var lastId = getId.substr(12)
+    
+    var id = firstId + "-" + lastId
+    
+    let userRef = db.collection('students').doc(id)
+    let getOnce = userRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                return res.send(doc.data())
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, user not found"
+            })
+        });
+}
+
 //? Get Once user
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/student/{studentId}
 //* Detail of once document of 'student' collection (find by id)
@@ -121,8 +152,11 @@ function updateStudentData(req, res) {
                     data: "Error, student not found"
                 });
             } else {
+                let getId = req.body.Id
+                let newId = getId.substr(0, 12) + "-" + getId.substr(12)
+                
                 let setAda = studentRef.update({
-                    Id: req.body.Id,
+                    Id: newId,
                     NameTH: req.body.NameTH,
                     NameEN: req.body.NameEN,
                     Faculty: req.body.Faculty,
@@ -149,6 +183,7 @@ function updateStudentData(req, res) {
 module.exports = {
     getAllStudent,
     getOnceStudent,
+    getOnceStudentHaveSign,
     addOnceStudent,
     updateStudentData
 }

@@ -54,6 +54,37 @@ function getLimitUser(req, res) {
         });
 }
 
+//? Get Once user (with sign)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/userSign/{userId}
+//* Detail of once document of 'users' collection (find by id)
+//~ use in mobile app to get data for display to mobile app
+function getOnceUserHaveSign(req, res) {
+    var getId = req.params.id
+    var firstId = getId.substr(0, 12)
+    var lastId = getId.substr(12)
+    
+    var id = firstId + "-" + lastId
+    
+    let userRef = db.collection('users').doc(id)
+    let getOnce = userRef.get()
+        .then(doc => {
+            if (!doc.exists) {
+                return res.status(404).json({
+                    status: 404,
+                    data: "Error, user not found"
+                })
+            } else {
+                return res.send(doc.data())
+            }
+        })
+        .catch(err => {
+            return res.status(404).json({
+                status: 404,
+                data: "Error, user not found"
+            })
+        });
+}
+
 //? Get Once user
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/{userId}
 //* Detail of once document of 'users' collection (find by id)
@@ -308,6 +339,7 @@ module.exports = {
     getAllUser,
     getLimitUser,
     getOnceUser,
+    getOnceUserHaveSign,
     getOnceEmail,
     addOnceUser,
     updateOnceUser,

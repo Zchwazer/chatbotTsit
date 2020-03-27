@@ -159,7 +159,7 @@ function getFilterStatusSubject(req, res) {
         });
 }
 
-//? Get All subjects (Filter status & Limit)
+//? Get All student (Filter status & Limit)
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/subject/filterSt/{status}/{limitNumber}
 //* List all user in 'subjects' collection (with limiter)
 //~ use in web app (admin) to look all of subject in web app
