@@ -534,7 +534,6 @@ function addStudentGroup(req, res) {
                                                 NameTH: secStudentDoc.data().NameTH,
                                                 NameEN: secStudentDoc.data().NameEN
                                             })
-
                                     }
                                     //~ Add Student in group complete
                                     return res.status(201).json({

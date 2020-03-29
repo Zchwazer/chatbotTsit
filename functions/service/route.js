@@ -19,6 +19,7 @@ const teacher = require("./controller/teacher");
 const group = require("./controller/group");
 const work = require("./controller/work");
 const admin = require("./controller/admin");
+const dashboard = require("./controller/dashboard");
 
 //---------------------------------------------------------------------//
 //~ User Collection
@@ -58,7 +59,7 @@ router.get("/student", student.getAllStudent);
 router.get("/student/filterId/:id", student.getOnceStudent);
 
 //* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/filterSign/{studentId}
-router.get("/student/filterSign/:id", student.getOnceStudentHaveSign);
+router.get("/student/filterSign/:id", student.getOnceStudentNoSign);
 
 //# POST => https://us-central1-newagent-47c20.cloudfunctions.net/api/student/
 router.post("/student", student.addOnceStudent);
@@ -256,6 +257,35 @@ router.put("/admin/updatePs/:id", admin.updateAdminPassword);
 
 //? PUT => https://us-central1-newagent-47c20.cloudfunctions.net/api/admin/updateEm/{adminId}
 router.put("/admin/updateEm/:id", admin.updateAdminPassword);
+
+//---------------------------------------------------------------------//
+//~ Dashboard Section
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard/student
+router.get("/dashboard/student", dashboard.getStudentLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/user", dashboard.getUserLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/group", dashboard.getGroupLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/sec", dashboard.getSecLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/teacher", dashboard.getTeacherLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/work", dashboard.getWorkLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/news", dashboard.getNewsLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/subject", dashboard.getSubjectLength);
+
+//* GET => https://us-central1-newagent-47c20.cloudfunctions.net/api/dashboard
+router.get("/dashboard/admin", dashboard.getAdminLength);
 
 //---------------------------------------------------------------------//
 module.exports = router;

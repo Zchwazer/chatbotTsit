@@ -42,16 +42,40 @@ let db = admin.firestore();
 // //     return secDoc
 // // }
 
-var studentAllData = [];
-var secId = '5ca99695-7f1f-47ba-98f6-4b6c0fa15fbe'
+// var studentAllData = [];
+// var secId = '5ca99695-7f1f-47ba-98f6-4b6c0fa15fbe'
 
-let secRef = db.collection('secs').doc(secId).collection('students').get()
-    .then((snapshot) => {
-        snapshot.forEach((doc) => {
-            studentAllData.push(doc.data());
-        });
-        console.log(studentAllData)
-    })
-    .catch((err) => {
+// let secRef = db.collection('secs').doc(secId).collection('students').get()
+//     .then((snapshot) => {
+//         snapshot.forEach((doc) => {
+//             studentAllData.push(doc.data());
+//         });
+//         console.log(studentAllData)
+//     })
+//     .catch((err) => {
+//         console.log(err)
+//     });
+
+testLength()
+
+async function testLength() {
+    try{
+        var groupAllData = await getDataSnapshot();
+        console.log(groupAllData)
+    }
+
+    catch (err){
         console.log(err)
-    });
+    }
+
+    async function getDataSnapshot() {
+        var dataIndex = 0
+        var allData = 0
+        var dataSnapshot = db.collection('admins').get()
+        for (const dataDoc of (await dataSnapshot).docs) {
+            dataIndex++
+            allData = dataIndex         
+        }    
+        return allData
+    }
+}

@@ -32,11 +32,11 @@ function getAllStudent(req, res) {
         });
 }
 
-//? Get Once student (with sign)
-//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/userSign/{userId}
+//? Get Once student (with no sign)
+//# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/studentSign/{userId}
 //* Detail of once document of 'users' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
-function getOnceStudentHaveSign(req, res) {
+function getOnceStudentNoSign(req, res) {
     var getId = req.params.id
     var firstId = getId.substr(0, 12)
     var lastId = getId.substr(12)
@@ -63,11 +63,11 @@ function getOnceStudentHaveSign(req, res) {
         });
 }
 
-//? Get Once user
+//? Get Once student
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/student/{studentId}
 //* Detail of once document of 'student' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
-function getOnceStudent(req, res) {
+function getOnceStudent(req, res) {        
     let stuRef = db.collection('students').doc(req.params.id)
     let getOnce = stuRef.get()
         .then(doc => {
@@ -183,7 +183,7 @@ function updateStudentData(req, res) {
 module.exports = {
     getAllStudent,
     getOnceStudent,
-    getOnceStudentHaveSign,
+    getOnceStudentNoSign,
     addOnceStudent,
     updateStudentData
 }
