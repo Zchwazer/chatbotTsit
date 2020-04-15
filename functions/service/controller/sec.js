@@ -183,13 +183,18 @@ function addOnceSection(req, res) {
   //# Test Section
   async function getStarted() {
     try {
+      //# Check subject is found (Subject must be found)
       let statusA = await getSubjectStatus();
+
+      //# Check UUID is found ? (UUID should not same)
       let statusB = await getSecStatus();
 
+      //* If subject found & uuid not found
       if (statusA === true && statusB === true) {
         addSec();
         addGroup();
 
+        //* search teacher
         var teacherData = await implementTeacher();
         addTeacher(teacherData);
 

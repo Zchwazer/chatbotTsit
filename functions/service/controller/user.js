@@ -54,7 +54,7 @@ function getLimitUser(req, res) {
         });
 }
 
-//? Get Once user (with sign)
+//? Get Once user (with no sign)
 //# GET METHOD => http://localhost:5000/newagent-47c20/us-central1/api/userSign/{userId}
 //* Detail of once document of 'users' collection (find by id)
 //~ use in mobile app to get data for display to mobile app
@@ -241,7 +241,13 @@ function addOnceUser(req, res) {
 //# PUT METHOD => http://localhost:5000/newagent-47c20/us-central1/api/user/updateLv/{userId}
 //~ use in web app for administrator to change level of user from "student" to "leader"
 function updateOnceUser(req, res) {
-    let userRef = db.collection('users').doc(req.params.id)
+    var getId = req.params.id
+    var firstId = getId.substr(0, 12)
+    var lastId = getId.substr(12)
+    
+    var chkId = firstId + "-" + lastId            
+
+    let userRef = db.collection('users').doc(chkId)
     let getRef = userRef.get()
         .then(doc => {
             if (!doc.exists) {
@@ -251,6 +257,15 @@ function updateOnceUser(req, res) {
                 })
             } else {
                 let setAda = userRef.update({
+                    NameTH: req.body.NameTH,
+                    NameEN: req.body.NameEN,                    
+                    Id: req.body.Id,
+                    Email: req.body.Email,
+                    Password: req.body.Password,               
+                    Major: req.body.Major,
+                    Faculty: req.body.Faculty,                    
+                    Degree: req.body.Degree,
+                    Status: req.body.Status,
                     Level: req.body.Level
                 });
 
