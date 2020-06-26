@@ -1,9 +1,9 @@
 Topic  : Chatbot Tsit For Rajamangala University Technology Thanyaburi
-########################################################
-Member : 
+
+Member 
 1.Harin Thananam        : Back-End 
 2.Pawanachai Seeruesang : Front-End 
-########################################################
+
 Technology :
 1.Visual Studio Code    
 2.Android Studio
@@ -18,4 +18,4 @@ Technology :
 11.Postman
 12.Slack
 13.Trello
-########################################################
+
